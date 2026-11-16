@@ -1,0 +1,121 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+  <sys:String x:Key="ServiceIsolationGuidance">Physically disconnect the load and isolate external equipment. Recall and language changes can briefly energize the terminals. The app's Off indication reports the output setting, so check isolation at the bench.</sys:String>
+  <sys:String x:Key="ServiceCompatibilityGuidance">For language and legacy actions, open the guide under Programming language.</sys:String>
+  <sys:String x:Key="ServicePasscodeGuidance">Enter the current passcode above. Set passcode stores the new value immediately. A value of zero removes passcode protection.</sys:String>
+
+  <Style x:Key="ServiceHelpEntry" TargetType="TextBlock" BasedOn="{StaticResource MutedText}">
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="Margin" Value="0,0,0,8" />
+  </Style>
+  <Style x:Key="ServiceHelpLabel" TargetType="Run">
+    <Setter Property="Foreground" Value="{DynamicResource Ink}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style x:Key="ServiceHelpLink" TargetType="Hyperlink">
+    <Setter Property="Foreground" Value="{DynamicResource Action}" />
+    <Setter Property="Focusable" Value="True" />
+    <Style.Triggers>
+      <Trigger Property="IsKeyboardFocused" Value="True">
+        <Setter Property="Background" Value="{DynamicResource Action}" />
+        <Setter Property="Foreground" Value="{DynamicResource ActionInk}" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+
+  <DataTemplate x:Key="ServiceMemoryHelp">
+    <StackPanel Margin="8,0,8,0">
+      <TextBlock Style="{StaticResource ServiceHelpEntry}">
+        <Run Style="{StaticResource ServiceHelpLabel}" Text="Run self-test." />
+        <Run Text=" Turns the output off while the supply runs diagnostics. The app verifies Off before and after the test." />
+      </TextBlock>
+      <TextBlock Style="{StaticResource ServiceHelpEntry}">
+        <Run Style="{StaticResource ServiceHelpLabel}" Text="Reset instrument." />
+        <Run Text=" Restores live settings such as setpoints and protections to their defaults, cancels pending triggers, and leaves the output off." />
+      </TextBlock>
+      <TextBlock Style="{StaticResource ServiceHelpEntry}">
+        <Run Style="{StaticResource ServiceHelpLabel}" Text="Save with output off." />
+        <Run Text=" Turns the output off and overwrites the selected slot with the current settings. Slot 0 is used at startup when recall is selected." />
+      </TextBlock>
+      <TextBlock Style="{StaticResource ServiceHelpEntry}">
+        <Run Style="{StaticResource ServiceHelpLabel}" Text="Recall isolated." />
+        <Run Text=" Loads the selected slot. A saved On state can briefly energize the terminals before the app verifies Off. Isolate the load first." />
+      </TextBlock>
+      <TextBlock Style="{StaticResource ServiceHelpEntry}">
+        <Run Style="{StaticResource ServiceHelpLabel}" Text="Review slot 0." />
+        <Run Text=" Previews the current live settings that would be saved to slot 0 with output off." />
+      </TextBlock>
+      <TextBlock Style="{StaticResource ServiceHelpEntry}">
+        <Run Style="{StaticResource ServiceHelpLabel}" Text="Apply startup policy." />
+        <Run Text=" Turns output off and sets the behavior for future power-ups. Reset uses defaults. RecallSlotZero replaces slot 0 with the reviewed settings saved with output off, then selects that slot for startup." />
+      </TextBlock>
+    </StackPanel>
+  </DataTemplate>
+
+  <DataTemplate x:Key="ServiceCompatibilityHelp">
+    <StackPanel Margin="8,0,8,0">
+      <TextBlock Style="{StaticResource ServiceHelpEntry}">
+        <Run Style="{StaticResource ServiceHelpLabel}" Text="Enter Compatibility." />
+        <Run Text=" Saves the language and restarts. The output can come on at startup. The app requests Off, but Compatibility has no output-enable readback. Check the supply." />
+      </TextBlock>
+      <TextBlock Style="{StaticResource ServiceHelpEntry}">
+        <Run Style="{StaticResource ServiceHelpLabel}" Text="Return to SCPI and verify off." />
+        <Run Text=" Saves SCPI and restarts. The app then verifies the instrument identity and output Off. If the app cannot identify the supply in Compatibility, select SCPI in the front panel Address menu and reconnect." />
+      </TextBlock>
+      <TextBlock Style="{StaticResource ServiceHelpEntry}">
+        <Run Style="{StaticResource ServiceHelpLabel}" Text="Read legacy measurements." />
+        <Run Text=" Shows live voltage, current, and status." />
+      </TextBlock>
+      <TextBlock Style="{StaticResource ServiceHelpEntry}">
+        <Run Style="{StaticResource ServiceHelpLabel}" Text="Acknowledge legacy events." />
+        <Run Text=" Reads and clears accumulated status, latched faults, and the programming error." />
+      </TextBlock>
+      <TextBlock Style="{StaticResource ServiceHelpEntry}">
+        <Run Style="{StaticResource ServiceHelpLabel}" Text="Read and clear error." />
+        <Run Text=" Reads and clears the programming error alone." />
+      </TextBlock>
+      <TextBlock Style="{StaticResource ServiceHelpEntry}">
+        <Run Style="{StaticResource ServiceHelpLabel}" Text="Apply fault mask." />
+        <Run Text=" Selects which conditions are reported as faults. Enter the decimal sum of the selected bit weights, or 0 to select none. " />
+        <Hyperlink Style="{StaticResource ServiceHelpLink}" Tag="{Binding ElementName=FaultMaskGuideStatus}"
+                   NavigateUri="https://www.keysight.com/mt/en/assets/9018-01225/programming-guides/9018-01225.pdf#page=88">Keysight fault mask bit assignments (Table B-4)</Hyperlink>
+        <Run x:Name="FaultMaskGuideStatus" Foreground="{DynamicResource Warning}" />
+      </TextBlock>
+      <TextBlock Style="{StaticResource ServiceHelpEntry}">
+        <Run Style="{StaticResource ServiceHelpLabel}" Text="Apply service requests." />
+        <Run Text=" Lets the supply signal selected faults to a GPIB controller. Over RS-232, read the status and fault registers to check for faults." />
+      </TextBlock>
+      <TextBlock Style="{StaticResource ServiceHelpEntry}">
+        <Run Style="{StaticResource ServiceHelpLabel}" Text="Set power-on request." />
+        <Run Text=" Controls the GPIB service request at power-up. The supply accepts one change per mains power cycle." />
+      </TextBlock>
+      <TextBlock Style="{StaticResource ServiceHelpEntry}">
+        <Run Style="{StaticResource ServiceHelpLabel}" Text="Set startup relay." />
+        <Run Text=" Chooses whether the optional output relay opens or closes at power-up. Isolate the load and confirm Option 760 in SCPI during this connection." />
+      </TextBlock>
+      <TextBlock Style="{StaticResource ServiceHelpEntry}">
+        <Run Style="{StaticResource ServiceHelpLabel}" Text="Run isolated self-test." />
+        <Run Text=" Requests Off before and after diagnostics. Compatibility cannot verify Off, so isolate the load and check the supply." />
+      </TextBlock>
+      <TextBlock Style="{StaticResource ServiceHelpEntry}">
+        <Run Style="{StaticResource ServiceHelpLabel}" Text="Clear and request off." />
+        <Run Text=" Restores the Compatibility power-up state before the app requests Off. The terminals can energize briefly, so isolate the load and check the supply." />
+      </TextBlock>
+    </StackPanel>
+  </DataTemplate>
+
+  <DataTemplate x:Key="ServiceCalibrationHelp">
+    <StackPanel>
+      <TextBlock Style="{StaticResource Caption}" Margin="0,0,0,4"
+                 Text="Remove the normal load. Review the reference equipment in Table B-1 and fixture wiring for your selected procedure in Appendix B of the 66332A User’s Guide." />
+      <TextBlock Style="{StaticResource Caption}" Margin="0,0,0,4">
+        <Hyperlink Style="{StaticResource ServiceHelpLink}" Tag="{Binding ElementName=CalibrationGuideStatus}"
+                   NavigateUri="https://www.keysight.com/gr/en/assets/9018-01126/user-manuals/9018-01126.pdf#page=54">Read the Keysight calibration guide</Hyperlink>
+        <Run x:Name="CalibrationGuideStatus" Foreground="{DynamicResource Warning}" />
+      </TextBlock>
+      <TextBlock Style="{StaticResource Caption}"
+                 Text="After you confirm the wiring in the procedure, the app resets the supply and energizes the fixture. Save constants overwrites the stored calibration. Discard constants keeps the previous values." />
+    </StackPanel>
+  </DataTemplate>
+</ResourceDictionary>

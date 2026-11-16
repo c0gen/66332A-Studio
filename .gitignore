@@ -49,5 +49,5 @@ hardware-qualification.json
 *.json.partial
 *.jsonl.partial
 
-# Personal-use font with no verified redistribution permission
+# Local personal-use font from older builds
 /font/technology_2/

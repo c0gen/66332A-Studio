@@ -1,11 +1,34 @@
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Navigation;
 
 namespace Agilent66332A.Desktop.Features.Service;
 
 public partial class ServiceView : UserControl
 {
-    public ServiceView() => InitializeComponent();
+    public ServiceView()
+    {
+        InitializeComponent();
+        AddHandler(Hyperlink.RequestNavigateEvent, new RequestNavigateEventHandler(OpenGuide));
+    }
+
+    private static void OpenGuide(object sender, RequestNavigateEventArgs e)
+    {
+        e.Handled = true;
+        string message = "";
+        try
+        {
+            using var process = Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
+        }
+        catch (Win32Exception)
+        {
+            message = "  Windows couldn’t open the guide.";
+        }
+        if (e.OriginalSource is Hyperlink { Tag: Run status }) status.Text = message;
+    }
 
     private async void StartCalibration(object sender, RoutedEventArgs e)
     {

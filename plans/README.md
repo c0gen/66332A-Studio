@@ -18,7 +18,8 @@ The recommended implementation is **C# on .NET 10 LTS, WPF, CommunityToolkit.Mvv
 | [06: Implementation roadmap](06-implementation-roadmap.md) | Dependency-ordered milestones with concrete completion gates. |
 | [07: Verification and release](07-verification-and-release.md) | Automated checks, visual review, hardware acceptance, and portable delivery. |
 | [08: Decisions, risks, and sources](08-decisions-risks-and-sources.md) | Decision record, unresolved measurements, and primary references. |
-| [09: UI polish pass](09-ui-polish-pass.md) | Appearance deficiencies, updated design tokens, and ordered work packages for the visual refresh. Not yet implemented. |
+| [09: UI polish pass](09-ui-polish-pass.md) | Appearance deficiencies, updated design tokens, and ordered work packages for the visual refresh. Implemented. |
+| [10: UI refinement pass 2](10-ui-refinement-pass.md) | Second-pass deficiencies in the refreshed build and ordered work packages for state legibility, charts, consistency and depth. Not yet implemented. |
 | [Original brief](reference/original-plan.md) | Preserved user-supplied starting point; historical reference. |
 
 ## What changes from the original

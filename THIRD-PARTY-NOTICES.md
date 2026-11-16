@@ -11,7 +11,7 @@
 | SkiaSharp and HarfBuzzSharp | See desktop lock file | MIT plus native-component notices; [SkiaSharp](https://github.com/mono/SkiaSharp) |
 | OpenTK / GLWpfControl / GLFW | See desktop lock file | Package-specific license metadata and bundled notices; [OpenTK](https://github.com/opentk/opentk) |
 | IBM Plex Sans (Regular, Medium, SemiBold) / Mono (Regular, Medium) | Vendored font files | SIL Open Font License 1.1; [IBM Plex](https://github.com/IBM/plex); full license in `Assets/Fonts/OFL.txt` |
-| Technology (optional seven-segment display font) | Local `font/technology_2/Technology.ttf` | Copyright (c) 2024 Vladimir Nikolic. The author offers it for personal use. Builds with this local font embed it. A fresh checkout uses IBM Plex Mono for the readout. [Author’s font listing](https://www.dafont.com/technology-2.font) |
+| DSEG7 Classic Regular (seven-segment readout) | 0.46 | SIL Open Font License 1.1. Full license in `Assets/Fonts/DSEG-LICENSE.txt`. [Upstream release](https://github.com/keshikan/DSEG/releases/tag/v0.46) |
 | xUnit / Microsoft.NET.Test.Sdk | See central versions / test locks | Development/test dependencies, not distributed as application features. |
 
-Font files were obtained from IBM's Plex repository. The application works offline and falls back to Segoe UI / Consolas if needed. The font license applies to the fonts, not the application's source.
+The application bundles its fonts for offline use. The bundled fonts are licensed separately from the application source.

@@ -42,7 +42,7 @@
 
   <FontFamily x:Key="BodyFont">pack://application:,,,/Agilent66332A.Desktop;component/Assets/Fonts/#IBM Plex Sans, Segoe UI</FontFamily>
   <FontFamily x:Key="MonoFont">pack://application:,,,/Agilent66332A.Desktop;component/Assets/Fonts/#IBM Plex Mono, Consolas</FontFamily>
-  <FontFamily x:Key="MeasurementFont">pack://application:,,,/Agilent66332A.Desktop;component/Assets/Fonts/#Technology, pack://application:,,,/Agilent66332A.Desktop;component/Assets/Fonts/#IBM Plex Mono, Consolas</FontFamily>
+  <FontFamily x:Key="MeasurementFont">pack://application:,,,/Agilent66332A.Desktop;component/Assets/Fonts/#DSEG7 Classic, pack://application:,,,/Agilent66332A.Desktop;component/Assets/Fonts/#IBM Plex Mono, Consolas</FontFamily>
   <BooleanToVisibilityConverter x:Key="BoolVisibility" />
   <c:InverseBooleanConverter x:Key="InverseBool" />
 

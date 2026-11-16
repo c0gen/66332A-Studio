@@ -33,7 +33,7 @@ Use neutral ink for estimated power. Card depth comes from surface tone and 1-DI
 
 - IBM Plex Sans Regular for 14-DIP body text. Use 20-DIP SemiBold page titles, 16-DIP SemiBold card titles, 13-DIP Medium field labels, and 12-DIP Regular captions.
 - IBM Plex Mono Regular and Medium for 13-DIP numeric fields and transcripts. ScottPlot uses the bundled Plex Sans Regular font. [IBM Plex source](https://github.com/IBM/plex)
-- The Technology font renders the seven-segment display. Fixed-width cells right-align each digit over faint unlit segments. Use 64-DIP voltage/current and 44-DIP power digits, dropping to 44 and 32 in compact mode. Units are separate 20-DIP Plex Sans Medium labels.
+- DSEG7 Classic Regular renders the seven-segment display. Fixed-width cells align each digit over faint unlit segments. Use up to 64 DIP for voltage and current and 44 DIP for power, with compact sizes of 44 and 32 DIP. The digits and their Plex Sans Medium unit label scale together when the column narrows.
 - Use sentence case in the workspace and uppercase for instrument annunciators.
 
 **Geometry**

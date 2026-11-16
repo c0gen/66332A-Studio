@@ -21,7 +21,7 @@ Planning baseline: November 3, 2026. The repository initially contained only thi
 | D13 | Ship a simulator preview with read-only physical connection. | Adapter/Break/quantization acceptance has no physical evidence; desktop composition cannot enable physical output or change physical settings until that gate is implemented and validated. |
 | D14 | Reuse the typed client/worker over a simulator transport. | Normal UI workflows exercise the production framing and ordering; separate scripted transports cover failures. A development-only headless harness verifies reusable boundaries. |
 | D15 | Use indigo-violet for actions and selection, with 12-DIP panels and a left icon rail. | Stable channel colors and predictable navigation separate actions from instrumentation. |
-| D16 | Keep the seven-segment font with fixed digit cells, ghost segments and a static live glow. | Changing digits keep unit positions stable. The Technology font terms remain unverified for redistribution. |
+| D16 | Bundle DSEG7 Classic Regular with fixed digit cells, ghost segments, and a static live glow. | Local and packaged builds use the same seven-segment face under the SIL Open Font License 1.1. |
 | D17 | Use state-reactive Output Off and one looping Ready pulse. | Output Off fills red immediately while energized. Reduced motion and high contrast suppress the connection pulse and other transitions. |
 
 ## Changes and retained behavior

@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:c="clr-namespace:Agilent66332A.Desktop.Controls"
              xmlns:model="clr-namespace:Agilent66332A.Core.Models;assembly=Agilent66332A.Core">
+  <UserControl.Resources>
+    <ResourceDictionary Source="ServiceHelp.xaml" />
+  </UserControl.Resources>
   <ScrollViewer DataContext="{Binding Service}" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
     <StackPanel Margin="0,0,8,0">
       <DockPanel Margin="0,0,0,12">
@@ -19,14 +22,21 @@
             <StackPanel>
               <TextBlock Text="Device memory and startup" Style="{StaticResource Title}" />
               <Border Style="{StaticResource AckCallout}" Margin="0,0,0,8">
-                <CheckBox IsChecked="{Binding FixtureIsolated}">
-                <TextBlock Text="I have disconnected the load and isolated external equipment" TextWrapping="Wrap" />
-                </CheckBox>
+                <StackPanel>
+                  <TextBlock Text="{StaticResource ServiceIsolationGuidance}" Style="{StaticResource Caption}" />
+                  <CheckBox IsChecked="{Binding FixtureIsolated}">
+                    <TextBlock Text="I have disconnected the load and isolated external equipment" TextWrapping="Wrap" />
+                  </CheckBox>
+                </StackPanel>
               </Border>
+              <Expander Header="Review memory and startup actions" ContentTemplate="{StaticResource ServiceMemoryHelp}" Margin="0,0,0,8" />
               <Border Style="{StaticResource AckCallout}" Margin="0,0,0,8">
-                <CheckBox IsChecked="{Binding DestructiveActionConfirmed}">
-                <TextBlock Text="I have reviewed this service action and its effect on the supply" TextWrapping="Wrap" />
-                </CheckBox>
+                <StackPanel>
+                  <TextBlock Text="{StaticResource ServiceCompatibilityGuidance}" Style="{StaticResource Caption}" />
+                  <CheckBox IsChecked="{Binding DestructiveActionConfirmed}">
+                    <TextBlock Text="I have reviewed this service action and its effect on the supply" TextWrapping="Wrap" />
+                  </CheckBox>
+                </StackPanel>
               </Border>
               <WrapPanel Margin="0,0,0,8">
                 <Button Content="Run self-test" Command="{Binding SelfTestCommand}" Margin="0,0,8,0" />
@@ -59,7 +69,8 @@
           <Border Style="{StaticResource FormCard}">
             <StackPanel>
               <TextBlock Text="Programming language" Style="{StaticResource Title}" />
-              <TextBlock Text="Changing language saves the selection and restarts the supply. Isolate the load before switching. Use the front panel Address menu to recover a unit that cannot be identified in Compatibility mode." Style="{StaticResource Caption}" TextWrapping="Wrap" Margin="0,4,0,8" />
+              <TextBlock Text="Switching languages restarts the supply. Isolate the load first." Style="{StaticResource Caption}" Margin="0,4,0,4" />
+              <Expander Header="Review language and Compatibility actions" ContentTemplate="{StaticResource ServiceCompatibilityHelp}" Margin="0,0,0,8" />
               <WrapPanel>
                 <Button Content="Enter Compatibility" Style="{StaticResource RiskButton}" Command="{Binding SwitchLanguageCommand}" CommandParameter="{x:Static model:ProgrammingLanguage.Compatibility}" Margin="0,0,8,4" />
                 <Button Content="Return to SCPI and verify off" Command="{Binding SwitchLanguageCommand}" CommandParameter="{x:Static model:ProgrammingLanguage.Scpi}" Margin="0,0,0,4" />
@@ -108,10 +119,10 @@
           <Border Style="{StaticResource FormCard}">
             <StackPanel>
               <TextBlock Text="Calibration" Style="{StaticResource Title}" />
-              <TextBlock Text="Use the reference equipment and fixtures in the Keysight user guide, Appendix B. The procedure can energize the selected fixture and only stores calibration constants when you select Save." Style="{StaticResource Caption}" TextWrapping="Wrap" Margin="0,5,0,10" />
+              <ContentPresenter ContentTemplate="{StaticResource ServiceCalibrationHelp}" Margin="0,5,0,8" />
               <Border Style="{StaticResource AckCallout}" Margin="0,0,0,8">
                 <CheckBox IsChecked="{Binding CalibrationWiringConfirmed}">
-                <TextBlock Text="I am using an isolated bench and have reviewed the procedure" TextWrapping="Wrap" />
+                  <TextBlock Text="I am using an isolated bench and have reviewed the procedure" TextWrapping="Wrap" />
                 </CheckBox>
               </Border>
               <HeaderedContentControl Style="{StaticResource FormField}">
@@ -151,7 +162,7 @@
               </Border>
               <Expander Header="Change calibration passcode" Margin="0,12,0,0">
                 <StackPanel Margin="0,6,0,0">
-                  <TextBlock Text="Enter the current passcode above. The new passcode is stored immediately. Zero removes passcode protection." Style="{StaticResource Caption}" TextWrapping="Wrap" Margin="0,0,0,6" />
+                  <TextBlock Text="{StaticResource ServicePasscodeGuidance}" Style="{StaticResource Caption}" Margin="0,0,0,6" />
                   <HeaderedContentControl Style="{StaticResource FormField}">
                     <HeaderedContentControl.Header>
                       <Label Content="New passcode" Target="{Binding ElementName=NewPasscode}" Style="{StaticResource FieldLabel}" />

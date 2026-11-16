@@ -7,6 +7,6 @@
     <PackageReference Include="CommunityToolkit.Mvvm" /><PackageReference Include="ScottPlot.WPF" />
     <Resource Include="Assets/Fonts/*.ttf" /><Resource Include="Assets/Studio.ico" /><Content Include="Assets/Fonts/OFL.txt" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="Assets/Fonts/IBMPlexSans-Regular.ttf" CopyToOutputDirectory="PreserveNewest" />
-    <Resource Include="../../font/technology_2/Technology.ttf" Link="Assets/Fonts/Technology.ttf" Condition="Exists('../../font/technology_2/Technology.ttf')" />
+    <Content Include="Assets/Fonts/DSEG-LICENSE.txt" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

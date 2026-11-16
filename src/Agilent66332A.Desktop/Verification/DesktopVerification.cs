@@ -20,6 +20,11 @@ internal static partial class DesktopVerification
 {
     public static async Task RunAsync(MainWindow window, ShellViewModel vm, string path)
     {
+        var readoutFont = (FontFamily)window.FindResource("MeasurementFont");
+        Require(new Typeface(readoutFont, FontStyles.Normal, FontWeights.Regular, FontStretches.Normal).TryGetGlyphTypeface(out var readoutFace)
+            && readoutFace.FontUri.AbsolutePath.EndsWith("DSEG7Classic-Regular.ttf", StringComparison.OrdinalIgnoreCase),
+            "The measurement display did not resolve the bundled DSEG7 Classic font.");
+
         var plex = new FontFamily(new Uri("pack://application:,,,/Agilent66332A.Desktop;component/Assets/Fonts/"), "./#IBM Plex Sans");
         foreach (var weight in new[] { FontWeights.Regular, FontWeights.Medium, FontWeights.SemiBold })
             Require(new Typeface(plex, FontStyles.Normal, weight, FontStretches.Normal).TryGetGlyphTypeface(out var face)
@@ -35,6 +40,9 @@ internal static partial class DesktopVerification
             Require(vm.Session.State == ConnectionState.Disconnected, "Startup opened an instrument session.");
             string discoveredPorts = vm.Ports.Count == 0 ? "none" : string.Join(", ", vm.Ports.Select(port => port.DisplayName));
             await CaptureAsync(window, path, "01-disconnected");
+            window.SelectWorkspace(6);
+            await VerifyServiceHelpAsync(window, vm.Service);
+            window.SelectWorkspace(0);
             await VerifyConnectionSettingsAsync(window, vm, path);
             await vm.ConnectSimulatorAsync();
             Require(vm.Session.State == ConnectionState.Ready, "Simulator connection failed: " + vm.Message);
@@ -103,6 +111,7 @@ internal static partial class DesktopVerification
                 "Dirty-draft enable guard, run edit lock, Stop, recording discovery, and cable-loss unknown state checked.\n" +
                 "WPF recording controls, active-step indication, and both actions on the header output control checked.\n" +
                 "Waveform capture/export, serial trigger fire, Output Off during capture, setup readback, self-test and calibration discard checked.\n" +
+                "Service guidance and manual link targets checked at 1000 × 620, without acknowledgment, disconnected and in the simulator.\n" +
                 "All seven workspaces keep the output control visible at 1000 × 620.\n" +
                 "Modeless connection settings reuse one window and can verify Output Off without disconnecting.\n" +
                 "150% image is render-scale evidence, not a mixed-monitor DPI/accessibility acceptance.\n" +
@@ -156,11 +165,12 @@ internal static partial class DesktopVerification
         await window.Dispatcher.InvokeAsync(() => { }, DispatcherPriority.ApplicationIdle);
         await ClickAsync(window, "Read service settings");
         await CaptureAsync(window, path, "14-service-1120x680");
+        vm.Service.SelectedProcedure = vm.Service.CalibrationProcedures.Single(choice => choice.Procedure == CalibrationProcedure.Overvoltage);
+        await VerifyServiceHelpAsync(window, vm.Service);
         vm.Service.DestructiveActionConfirmed = true;
         await ClickAsync(window, "Run self-test");
         Require(vm.Session.Snapshot?.Output == OutputState.Off, "Service self-test did not leave the output off.");
 
-        vm.Service.SelectedProcedure = vm.Service.CalibrationProcedures.Single(choice => choice.Procedure == CalibrationProcedure.Overvoltage);
         vm.Service.CalibrationWiringConfirmed = true;
         var calibration = vm.Service.StartCalibrationAsync("");
         await WaitUntilAsync(() => vm.Service.PendingPrompt?.Kind == CalibrationPromptKind.Fixture);

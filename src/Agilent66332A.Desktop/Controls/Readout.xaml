@@ -20,13 +20,15 @@
                  VerticalAlignment="Center" Margin="0,0,8,0" />
       <TextBlock Text="{Binding Label, ElementName=Root}" Foreground="{DynamicResource Muted}" FontSize="13" FontWeight="Medium" />
     </StackPanel>
-    <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
-      <c:SegmentDisplay Text="{Binding Value, ElementName=Root}" DigitSize="{Binding DigitSize, ElementName=Root}"
-                        Placeholder="{Binding Placeholder, ElementName=Root}" MinIntegerDigits="{Binding MinIntegerDigits, ElementName=Root}"
-                        Foreground="{Binding Accent, ElementName=Root}" IdleBrush="{DynamicResource DisabledInk}" FontFamily="{StaticResource MeasurementFont}" />
-      <TextBlock Text="{Binding Unit, ElementName=Root}" Foreground="{Binding Accent, ElementName=Root}"
-                 FontSize="20" FontWeight="Medium" Opacity="0.8" VerticalAlignment="Bottom" Margin="8,0,0,6" />
-    </StackPanel>
+    <Viewbox Grid.Row="1" StretchDirection="DownOnly" HorizontalAlignment="Left" VerticalAlignment="Center">
+      <StackPanel Orientation="Horizontal">
+        <c:SegmentDisplay Text="{Binding Value, ElementName=Root}" DigitSize="{Binding DigitSize, ElementName=Root}"
+                          Placeholder="{Binding Placeholder, ElementName=Root}" MinIntegerDigits="{Binding MinIntegerDigits, ElementName=Root}"
+                          Foreground="{Binding Accent, ElementName=Root}" IdleBrush="{DynamicResource DisabledInk}" FontFamily="{StaticResource MeasurementFont}" />
+        <TextBlock Text="{Binding Unit, ElementName=Root}" Foreground="{Binding Accent, ElementName=Root}"
+                   FontSize="20" FontWeight="Medium" Opacity="0.8" VerticalAlignment="Bottom" Margin="8,0,0,6" />
+      </StackPanel>
+    </Viewbox>
     <TextBlock Grid.Row="2" Text="{Binding Detail, ElementName=Root}" Style="{StaticResource Caption}"
                Foreground="{Binding Foreground, ElementName=Root}" />
   </Grid>
