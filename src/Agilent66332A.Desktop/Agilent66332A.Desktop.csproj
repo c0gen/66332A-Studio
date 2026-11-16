@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>WinExe</OutputType><TargetFramework>net10.0-windows</TargetFramework><UseWPF>true</UseWPF><ApplicationManifest>app.manifest</ApplicationManifest><ApplicationIcon>Assets/Studio.ico</ApplicationIcon></PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Agilent66332A.Application/Agilent66332A.Application.csproj" />
+    <ProjectReference Include="../Agilent66332A.Instruments/Agilent66332A.Instruments.csproj" />
+    <ProjectReference Include="../Agilent66332A.Storage/Agilent66332A.Storage.csproj" />
+    <PackageReference Include="CommunityToolkit.Mvvm" /><PackageReference Include="ScottPlot.WPF" />
+    <Resource Include="Assets/Fonts/*.ttf" /><Resource Include="Assets/Studio.ico" /><Content Include="Assets/Fonts/OFL.txt" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Assets/Fonts/IBMPlexSans-Regular.ttf" CopyToOutputDirectory="PreserveNewest" />
+    <Resource Include="../../font/technology_2/Technology.ttf" Link="Assets/Fonts/Technology.ttf" Condition="Exists('../../font/technology_2/Technology.ttf')" />
+  </ItemGroup>
+</Project>

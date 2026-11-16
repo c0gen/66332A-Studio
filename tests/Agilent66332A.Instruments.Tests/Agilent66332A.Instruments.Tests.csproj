@@ -1,0 +1,1 @@
+<Project Sdk="Microsoft.NET.Sdk"><ItemGroup><ProjectReference Include="../../src/Agilent66332A.Instruments/Agilent66332A.Instruments.csproj" /></ItemGroup></Project>

@@ -1,0 +1,43 @@
+# Agilent 66332A RS-232 coverage and bench qualification
+
+This matrix follows the model-specific command dictionary and Compatibility appendix in the [Keysight programming guide](https://www.keysight.com/mt/en/assets/9018-01225/programming-guides/9018-01225.pdf#page=41). It describes the software. Physical support requires separate bench evidence for the actual instrument and serial connection.
+
+| Feature | Command families | App coverage and required evidence |
+| --- | --- | --- |
+| Connection and identity | `SYST:LANG?`, `*IDN?`, RS-232 Break | Exact 66332A identification. Connection supports 300 to 9600 baud, None/Even/Odd/Mark/Space parity and None/XON-XOFF/RTS-CTS/DTR-DSR flow control. Verify framing, cable, handshake, and recovery before enabling writes. |
+| Basic output | `VOLT`, `CURR`, `OUTP` and queries | Monitor setpoints and output enable. Stage changes, compare against programming bounds and quantization, and verify output changes by readback. PC sequences use these same operations. |
+| Protection | `VOLT:PROT`, `CURR:PROT:STAT`, `OUTP:PROT:DEL`, `OUTP:PROT:CLE` | Set and read OVP, OCP and the CC/OCP delay. Verify off before changing protection or clearing a latch. Record the observed regulation or fault state. |
+| Scalar meter and digitizer | `MEAS:VOLT?`, `MEAS:CURR?`, `SENS:CURR:RANG`, `SENS:CURR:DET`, `SENS:FUNC`, `SENS:SWE:*`, `SENS:WIND` | Live sequential DC readings and estimated power. Capture exposes two current ranges, high-range detector, measurement signal, points, interval, offset, and Hanning/rectangular windows. Verify settings and waveform behavior under `Acquisition`. |
+| Captures | `MEAS:ARR:*?`, `FETC:ARR:*?`, `FETC:{VOLT,CURR}[:ACDC\|MIN\|MAX\|HIGH\|LOW]?` | One measurement buffer. A direct measurement or completed acquisition returns samples and statistics from that buffer. The individual `MEAS` scalar variants correspond to a new capture followed by its statistics. Validate 4,096 points across sweeps, raw sign, offsets and duration. Export records what the instrument returned. |
+| Acquisition triggers | `INIT:SEQ2`, `TRIG:ACQ:*`, `TRIG:ACQ`, `*TRG`, `*OPC`, `ABOR` | Arm for internal signal conditions or an explicit software Fire action. Read both signals' edge, level, hysteresis and sweep count. Test `AcquisitionImmediate` and `AcquisitionBus` independently. |
+| Output triggers | `VOLT:TRIG`, `CURR:TRIG`, `TRIG:SOUR`, `INIT:SEQ1`, `INIT:CONT:SEQ1`, `TRIG:TRAN`, `*TRG`, `ABOR` | Stage, arm, fire, verify setpoint changes, and abort. Verify `TransientImmediate` and `TransientBus` independently. The manual documents partial serial `*TRG` behavior, so a successful acquisition trigger does not establish transient support. |
+| Rear port and relay | `*OPT?`, `DIG:FUNC`, `DIG:DATA`, `OUTP:RI:MODE`, `OUTP:DFI`, `OUTP:DFI:SOUR`, `OUTP:REL`, `OUTP:REL:POL`, `OUTP …,NOR` | Read and edit configured I/O. Use a fixture to confirm pin 3 and the deassertion behavior of each DFI source before enabling `DigitalIo`. `Relay` requires a verified Option 760. |
+| Device status | `STAT:{OPER,QUES}:{COND,EVEN,ENAB,NTR,PTR}`, `STAT:PRES`, `*STB?`, `*ESR?`, `*ESE`, `*SRE`, `*PSC`, `*CLS`, `SYST:ERR?` | Condition reads feed monitoring. Diagnostics can read or modify masks and explicitly acknowledge latches and drain errors. Acquisition uses the same standard-event reader. Qualify `Diagnostics` write behavior, including DFI. |
+| Display and panel | `VOLT:ALC:BAND?`, `DISP`, `DISP:MODE`, `DISP:TEXT`, `SYST:VERS?`, `SYST:LOC`, `SYST:REM`, `SYST:RWL` | Read Normal/Fast and SCPI version. Set the display and request local/remote control. Lockout requires an explicit action and a verified local restoration procedure under `Service`. |
+| Memory and service | `*SAV`, `*RCL`, `OUTP:PON:STAT`, `*RST`, `*TST?` | Save slots 0–3 with output off. Recall with the fixture isolated and finish with output off. Startup recall writes a freshly reviewed off state to slot 0. Verify persistence, self-test, and reset under `Service`. |
+| Compatibility mode | `SYST:LANG`, Appendix B | Detect the language without changing it. Service can switch with the fixture isolated and use the legacy readings, events, masks, startup controls, self-test, and clear operations described in the [Compatibility matrix](compatibility.md). Verified output control uses SCPI. Test `Compatibility` separately for the firmware. |
+| Calibration | `CAL:STAT`, `CAL:PASS`, `CAL:VOLT`, `CAL:VOLT:PROT`, `CAL:CURR`, `CAL:CURR:NEG`, `CAL:CURR:MEAS:LOWR`, `CAL:CURR:MEAS:AC`, `CAL:LEV`, `CAL:DATA`, `CAL:SAVE` | Guided SCPI procedures use the fixtures and reference measurements in the user guide. Confirm before saving constants. Test cancel, calibration exit, off verification, and password redaction under `Calibration`. |
+| Command aliases and bus operations | `TRIG:SEQ*:DEF`, named/numbered trigger variants, `*WAI`, GPIB GET, SRQ, serial poll | The two sequence names are fixed. The driver provides a typed workflow for each trigger and waits explicitly when completion matters. GPIB bus signaling is outside the RS-232 scope. |
+
+Set the instrument's interface and serial settings from the front panel. Local actions also include moving the rear Normal/Fast switch, changing sense wiring, front-panel AUTO range, mains power, the physical calibration interlock, and hardware service. [Keysight 66332A user guide](https://www.keysight.com/gr/en/assets/9018-01126/user-manuals/9018-01126.pdf#page=38)
+
+## Live verification for basic control
+
+With output off, click **Connect**. On a SCPI connection with an idle, fault-free supply and a 64–4,096 point sweep, the app automatically interrupts a voltage waveform, sends serial Break, verifies a clean response from the same instrument, and confirms Output Off by readback. This enables basic control for the current connection without a qualification file or labels. If the supply already has output on, turn it off and reconnect to run the check. Advanced writes use the saved bench record.
+
+## Bench record
+
+1. Begin with the default 9600-baud profile and the load isolated. In **Connection**, record the full instrument identity, adapter instance ID, driver key, driver INF/version, serial settings, and cable label. If the reported serial number is `0`, record a unique chassis serial or bench asset label. Enter that label when connecting with matching bench evidence. Record queried voltage, current, and OVP bounds. Measure readback quantization and verify the timing and correct terminal state for Output Off and fault clear.
+2. Confirm that the adapter sends Break and discards replies that were already in flight. Interrupt a long measurement, establish a fresh identity barrier, and independently confirm the output state after the off request. The driver retries only read-only probes within its overall shutdown budget and waits for a complete SCPI language reply before checking identity. Record the results, including any unverified state. Repeat for an additional serial profile before using its evidence.
+3. For each advanced capability, keep command/readback transcripts and fixture observations, including cancellation and failure cases. Use Option 760 hardware and calibration reference equipment for their respective checks. Use the [manufacturer procedure](https://www.keysight.com/gr/en/assets/9018-01126/user-manuals/9018-01126.pdf#page=54) for calibration.
+
+The desktop reads `hardware-qualification.json` at the path shown in **Connection**. Create a version 1 record only from that bench evidence. The top-level fields are `schemaVersion`, `verifiedUtc` (UTC timestamp), `benchReport` (evidence reference), `device`, `adapter`, `serial`, and `qualification`. Their nested fields are:
+
+| Object | Fields |
+| --- | --- |
+| `device` | `manufacturer`, `model`, `serialNumber`, `firmware`, as reported by the instrument. Add `chassisLabel` when `serialNumber` is `0`. It must match the label entered in Connection. |
+| `adapter` | `instanceId`, `driverKey`, `driverInf`, `driverVersion` shown in Connection. |
+| `serial` | `baudRate`, `parity`, `flowControl` (`None`, `XonXoff`, `RtsCts`, or `DtrDsr`), `dtrEnabled`, `rtsEnabled`, `cableId`. |
+| `qualification` | `voltage`, `current`, `ovp`, `ocpDelay` each with `minimum`, `maximum`, `resolution`. `breakValidated` must be `true`. Optional `features` is a comma-separated string of individually verified flags from the matrix. |
+
+The file does not ship with the app. A synchronized, identified link can still request Output Off during hardware monitoring. A lost link produces an unverified state when the app cannot confirm the output. Output-enable readback does not establish that the load has discharged.

@@ -1,0 +1,101 @@
+<UserControl x:Class="Agilent66332A.Desktop.Shell.ConnectionPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:Agilent66332A.Desktop.Controls"
+             xmlns:model="clr-namespace:Agilent66332A.Core.Models;assembly=Agilent66332A.Core">
+  <Border Style="{StaticResource PanelFrame}" Padding="16">
+    <StackPanel>
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition />
+          <ColumnDefinition Width="12" />
+          <ColumnDefinition Width="112" />
+        </Grid.ColumnDefinitions>
+        <StackPanel>
+          <Label Content="Port" Target="{Binding ElementName=SerialPort}" Style="{StaticResource FieldLabel}" />
+          <ComboBox x:Name="SerialPort" ItemsSource="{Binding Ports}" SelectedItem="{Binding SelectedPort, Mode=TwoWay}"
+                    DisplayMemberPath="DisplayName" IsSynchronizedWithCurrentItem="False"
+                    ToolTip="{Binding SelectedPort.DisplayName}" AutomationProperties.Name="Serial port" IsEnabled="{Binding CanConnect}" />
+        </StackPanel>
+        <StackPanel Grid.Column="2">
+          <Label Content="Baud" Target="{Binding ElementName=BaudRate}" Style="{StaticResource FieldLabel}" />
+          <ComboBox x:Name="BaudRate" ItemsSource="{Binding BaudRates}" SelectedItem="{Binding BaudRate}"
+                    AutomationProperties.Name="Baud rate" IsEnabled="{Binding CanConnect}" />
+        </StackPanel>
+      </Grid>
+      <DockPanel Margin="0,8,0,12">
+        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="8,0,0,0">
+          <Button Content="Refresh ports" Style="{StaticResource GhostButton}" c:Icon.Geometry="{StaticResource IconRefresh}"
+                  Command="{Binding RefreshPortsCommand}" Margin="0,0,8,0" />
+          <Button Content="Disconnect" Command="{Binding DisconnectCommand}" Margin="0,0,8,0">
+            <Button.Style>
+              <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding ConnectionStatus}" Value="{x:Static model:ConnectionState.Disconnected}">
+                    <Setter Property="IsEnabled" Value="False" />
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </Button.Style>
+          </Button>
+          <Button Content="Connect" c:Icon.Geometry="{StaticResource IconPlug}" Command="{Binding ConnectHardwareCommand}"
+                  Style="{StaticResource PrimaryButton}" />
+        </StackPanel>
+        <TextBlock Text="{Binding PortDiscoveryStatus}" Style="{StaticResource OptionalCaption}" />
+      </DockPanel>
+      <Border BorderBrush="{DynamicResource Line}" BorderThickness="0,1,0,0" Padding="0,12,0,0">
+        <StackPanel>
+          <TextBlock Text="Serial settings and bench qualification" Style="{StaticResource Title}" Margin="0,0,0,8" />
+          <UniformGrid Columns="4" IsEnabled="{Binding CanConnect}">
+            <StackPanel Margin="0,0,12,0">
+              <Label Content="Parity" Target="{Binding ElementName=Parity}" Style="{StaticResource FieldLabel}" />
+              <ComboBox x:Name="Parity" ItemsSource="{Binding Parities}" SelectedItem="{Binding Parity}" AutomationProperties.Name="Serial parity" />
+            </StackPanel>
+            <StackPanel Margin="0,0,12,0">
+              <Label Content="Flow control" Target="{Binding ElementName=FlowControl}" Style="{StaticResource FieldLabel}" />
+              <ComboBox x:Name="FlowControl" ItemsSource="{Binding FlowControls}" DisplayMemberPath="Key" SelectedValuePath="Value"
+                        SelectedValue="{Binding FlowControl}" AutomationProperties.Name="Serial flow control" />
+            </StackPanel>
+            <StackPanel Margin="0,0,12,0">
+              <Label Content="Cable label" Target="{Binding ElementName=CableIdentifier}" Style="{StaticResource FieldLabel}" />
+              <TextBox x:Name="CableIdentifier" Text="{Binding CableId, UpdateSourceTrigger=PropertyChanged}" MaxLength="80"
+                       AutomationProperties.HelpText="Enter the label of the bench tested cable to request qualified control." />
+            </StackPanel>
+            <StackPanel>
+              <Label Content="Chassis label" Target="{Binding ElementName=ChassisIdentifier}" Style="{StaticResource FieldLabel}" />
+              <TextBox x:Name="ChassisIdentifier" Text="{Binding ChassisLabel, UpdateSourceTrigger=PropertyChanged}" MaxLength="80"
+                       AutomationProperties.HelpText="If the instrument reports serial zero, enter the chassis serial or asset label from the bench report." />
+            </StackPanel>
+          </UniformGrid>
+          <StackPanel Orientation="Horizontal" IsEnabled="{Binding CanConnect}" Margin="0,4,0,4">
+            <CheckBox Content="Assert DTR" IsChecked="{Binding DtrEnabled}" IsEnabled="{Binding ManualDtr}" Margin="0,0,12,0" />
+            <CheckBox Content="Assert RTS" IsChecked="{Binding RtsEnabled}" IsEnabled="{Binding ManualRts}" />
+          </StackPanel>
+          <TextBlock Text="For a saved bench qualification, enter the tested cable label and the chassis label if the instrument reports serial 0."
+                     Style="{StaticResource Caption}" Margin="0,0,0,12" />
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition />
+              <ColumnDefinition Width="12" />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+              <Label Content="Windows adapter and driver" Style="{StaticResource FieldLabel}" Target="{Binding ElementName=AdapterDetails}" />
+              <TextBox x:Name="AdapterDetails" Text="{Binding AdapterDetails, Mode=OneWay}" IsReadOnly="True"
+                       TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Height="64" />
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+              <Label Content="Instrument identity" Style="{StaticResource FieldLabel}" Target="{Binding ElementName=InstrumentIdentity}" />
+              <TextBox x:Name="InstrumentIdentity" Text="{Binding InstrumentIdentityDetails, Mode=OneWay}" IsReadOnly="True"
+                       TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Height="64"
+                       ToolTip="Manufacturer, model, serial number and firmware" />
+            </StackPanel>
+          </Grid>
+          <Label Content="Qualification file" Style="{StaticResource FieldLabel}" Target="{Binding ElementName=QualificationFile}" Margin="0,8,0,0" />
+          <TextBox x:Name="QualificationFile" Text="{Binding QualificationPath, Mode=OneWay}" IsReadOnly="True"
+                   ToolTip="{Binding QualificationPath}" />
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </Border>
+</UserControl>

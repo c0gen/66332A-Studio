@@ -1,0 +1,114 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:c="clr-namespace:Agilent66332A.Desktop.Controls">
+  <SolidColorBrush x:Key="Enclosure" Color="#0E131A" />
+  <SolidColorBrush x:Key="Surface" Color="#151C26" />
+  <SolidColorBrush x:Key="SurfaceRaised" Color="#1D2632" />
+  <SolidColorBrush x:Key="Well" Color="#090D13" />
+  <SolidColorBrush x:Key="TableStripe" Color="#090D13" />
+  <SolidColorBrush x:Key="Line" Color="#253140" />
+  <SolidColorBrush x:Key="ControlLine" Color="#60738A" />
+  <SolidColorBrush x:Key="Ink" Color="#EEF2F6" />
+  <SolidColorBrush x:Key="Muted" Color="#A7B4C2" />
+  <SolidColorBrush x:Key="DisabledInk" Color="#74838F" />
+  <SolidColorBrush x:Key="Action" Color="#8B93FF" />
+  <SolidColorBrush x:Key="ActionInk" Color="#0B1020" />
+  <SolidColorBrush x:Key="ActionHover" Color="#A3AAFF" />
+  <SolidColorBrush x:Key="ActionPressed" Color="#747DE8" />
+  <SolidColorBrush x:Key="ActionSoft" Color="#232A40" />
+  <SolidColorBrush x:Key="Selected" Color="#2A314D" />
+  <SolidColorBrush x:Key="HoverOverlay" Color="#14EEF2F6" />
+  <SolidColorBrush x:Key="PressedOverlay" Color="#29000000" />
+  <SolidColorBrush x:Key="Voltage" Color="#68C9E5" />
+  <SolidColorBrush x:Key="Current" Color="#EFB57D" />
+  <SolidColorBrush x:Key="Ready" Color="#79D5AE" />
+  <SolidColorBrush x:Key="ReadySoft" Color="#213236" />
+  <SolidColorBrush x:Key="Warning" Color="#F0CA78" />
+  <SolidColorBrush x:Key="WarningSoft" Color="#2F3130" />
+  <SolidColorBrush x:Key="Fault" Color="#FF8E98" />
+  <SolidColorBrush x:Key="FaultSurface" Color="#312A34" />
+  <SolidColorBrush x:Key="FaultLine" Color="#C56B79" />
+  <SolidColorBrush x:Key="Danger" Color="#D9364C" />
+  <SolidColorBrush x:Key="DangerHover" Color="#C8324A" />
+  <SolidColorBrush x:Key="DangerInk" Color="#FFFFFF" />
+
+  <LinearGradientBrush x:Key="DisplayWell" StartPoint="0,0" EndPoint="0,1">
+    <GradientStop Color="#0B1017" Offset="0" />
+    <GradientStop Color="#06090D" Offset="1" />
+  </LinearGradientBrush>
+
+  <CornerRadius x:Key="RadiusControl">6</CornerRadius>
+  <CornerRadius x:Key="RadiusPanel">12</CornerRadius>
+
+  <FontFamily x:Key="BodyFont">pack://application:,,,/Agilent66332A.Desktop;component/Assets/Fonts/#IBM Plex Sans, Segoe UI</FontFamily>
+  <FontFamily x:Key="MonoFont">pack://application:,,,/Agilent66332A.Desktop;component/Assets/Fonts/#IBM Plex Mono, Consolas</FontFamily>
+  <FontFamily x:Key="MeasurementFont">pack://application:,,,/Agilent66332A.Desktop;component/Assets/Fonts/#Technology, pack://application:,,,/Agilent66332A.Desktop;component/Assets/Fonts/#IBM Plex Mono, Consolas</FontFamily>
+  <BooleanToVisibilityConverter x:Key="BoolVisibility" />
+  <c:InverseBooleanConverter x:Key="InverseBool" />
+
+  <Style TargetType="Window">
+    <Setter Property="Background" Value="{DynamicResource Enclosure}" />
+    <Setter Property="Foreground" Value="{DynamicResource Ink}" />
+    <Setter Property="FontFamily" Value="{DynamicResource BodyFont}" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="UseLayoutRounding" Value="True" />
+  </Style>
+
+  <Style TargetType="TextBlock">
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+
+  <Style x:Key="Title" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+    <Setter Property="FontSize" Value="16" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+
+  <Style x:Key="PageTitle" TargetType="TextBlock" BasedOn="{StaticResource Title}">
+    <Setter Property="FontSize" Value="20" />
+  </Style>
+
+  <Style x:Key="MutedText" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+    <Setter Property="Foreground" Value="{DynamicResource Muted}" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+  </Style>
+
+  <Style x:Key="Caption" TargetType="TextBlock" BasedOn="{StaticResource MutedText}">
+    <Setter Property="FontSize" Value="12" />
+  </Style>
+
+  <Style x:Key="OptionalCaption" TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+    <Style.Triggers>
+      <Trigger Property="Text" Value="">
+        <Setter Property="Visibility" Value="Collapsed" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+
+  <Style x:Key="PanelFrame" TargetType="Border">
+    <Setter Property="Background" Value="{DynamicResource Surface}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Line}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="{StaticResource RadiusPanel}" />
+  </Style>
+
+  <Style x:Key="FormCard" TargetType="Border" BasedOn="{StaticResource PanelFrame}">
+    <Setter Property="Padding" Value="16" />
+    <Setter Property="Grid.IsSharedSizeScope" Value="True" />
+  </Style>
+
+  <Style x:Key="FieldCaption" TargetType="TextBlock" BasedOn="{StaticResource MutedText}">
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="FontWeight" Value="Medium" />
+  </Style>
+
+  <Style x:Key="FocusRing" TargetType="Control">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate>
+          <Rectangle Margin="-2" RadiusX="8" RadiusY="8" Stroke="{DynamicResource Action}"
+                     StrokeThickness="2" IsHitTestVisible="False" />
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+</ResourceDictionary>

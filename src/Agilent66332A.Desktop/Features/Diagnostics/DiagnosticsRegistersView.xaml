@@ -1,0 +1,57 @@
+<UserControl x:Class="Agilent66332A.Desktop.Features.Diagnostics.DiagnosticsRegistersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:Agilent66332A.Desktop.Controls">
+  <ScrollViewer MaxHeight="260" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Margin="16">
+      <DockPanel Margin="0,0,0,8">
+        <WrapPanel DockPanel.Dock="Right" Margin="10,0,0,0">
+          <Button Content="Read registers" Style="{StaticResource GhostButton}" c:Icon.Geometry="{StaticResource IconRefresh}" Command="{Binding ReadRegistersCommand}" Margin="0,0,6,4" />
+          <Button Content="Drain error queue" Style="{StaticResource GhostButton}" Command="{Binding ReadErrorsCommand}" Margin="0,0,0,4" />
+        </WrapPanel>
+        <TextBlock Text="{Binding Summary}" FontFamily="{StaticResource MonoFont}" FontSize="12" TextWrapping="Wrap" />
+      </DockPanel>
+      <Grid Margin="0,0,0,8">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="116" /><ColumnDefinition Width="108" /><ColumnDefinition Width="108" />
+          <ColumnDefinition Width="108" /><ColumnDefinition Width="16" /><ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+        <TextBlock Grid.Column="1" Text="Enable" Style="{StaticResource MutedText}" />
+        <TextBlock Grid.Column="2" Text="Rising mask" Style="{StaticResource MutedText}" />
+        <TextBlock Grid.Column="3" Text="Falling mask" Style="{StaticResource MutedText}" />
+        <TextBlock Grid.Row="1" Text="Operation" Margin="0,6,0,0" />
+        <TextBox FontFamily="{StaticResource MonoFont}" Grid.Row="1" Grid.Column="1" Text="{Binding OperationEnable, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Operation enable mask" Margin="0,3,6,4" />
+        <TextBox FontFamily="{StaticResource MonoFont}" Grid.Row="1" Grid.Column="2" Text="{Binding OperationPositive, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Operation rising transition mask" Margin="0,3,6,4" />
+        <TextBox FontFamily="{StaticResource MonoFont}" Grid.Row="1" Grid.Column="3" Text="{Binding OperationNegative, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Operation falling transition mask" Margin="0,3,0,4" />
+        <TextBlock Grid.Row="2" Text="Questionable" Margin="0,6,0,0" />
+        <TextBox FontFamily="{StaticResource MonoFont}" Grid.Row="2" Grid.Column="1" Text="{Binding QuestionableEnable, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Questionable enable mask" Margin="0,3,6,0" />
+        <TextBox FontFamily="{StaticResource MonoFont}" Grid.Row="2" Grid.Column="2" Text="{Binding QuestionablePositive, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Questionable rising transition mask" Margin="0,3,6,0" />
+        <TextBox FontFamily="{StaticResource MonoFont}" Grid.Row="2" Grid.Column="3" Text="{Binding QuestionableNegative, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Questionable falling transition mask" Margin="0,3,0,0" />
+        <StackPanel Grid.Column="5" Grid.RowSpan="3">
+          <WrapPanel Margin="0,0,0,4">
+            <Label Content="Standard enable" Target="{Binding ElementName=StandardEnable}" Style="{StaticResource FieldLabel}" />
+            <TextBox FontFamily="{StaticResource MonoFont}" x:Name="StandardEnable" Text="{Binding StandardEnable, UpdateSourceTrigger=PropertyChanged}" MinWidth="72" Margin="0,0,8,4" />
+            <Label Content="Service enable" Target="{Binding ElementName=ServiceEnable}" Style="{StaticResource FieldLabel}" />
+            <TextBox FontFamily="{StaticResource MonoFont}" x:Name="ServiceEnable" Text="{Binding ServiceEnable, UpdateSourceTrigger=PropertyChanged}" MinWidth="72" Margin="0,0,0,4" />
+          </WrapPanel>
+          <CheckBox Content="Clear standard and service enable masks at power on" IsChecked="{Binding ClearEnablesAtPowerOn}" />
+        </StackPanel>
+      </Grid>
+      <Border Style="{StaticResource AckCallout}" Margin="0,0,0,8">
+        <CheckBox IsChecked="{Binding AcknowledgeEffects}">
+          <TextBlock Text="I have accounted for the connected fault output before editing masks or acknowledging events" TextWrapping="Wrap" />
+        </CheckBox>
+      </Border>
+      <WrapPanel>
+        <Button Content="Apply masks" c:Icon.Geometry="{StaticResource IconCheck}" Command="{Binding ApplyMasksCommand}" Margin="0,0,6,4" />
+        <Button Content="Preset masks" Style="{StaticResource GhostButton}" Command="{Binding PresetRegistersCommand}" Margin="0,0,6,4" />
+        <Button Content="Clear status and errors" Style="{StaticResource GhostButton}" Command="{Binding ClearRegistersCommand}" Margin="0,0,12,4" />
+        <ComboBox ItemsSource="{Binding EventRegisters}" SelectedItem="{Binding SelectedRegister}" MinWidth="113" Margin="0,0,6,4" AutomationProperties.Name="Event register to acknowledge" />
+        <Button Content="Acknowledge events" Style="{StaticResource GhostButton}" Command="{Binding AcknowledgeEventCommand}" Margin="0,0,0,4" />
+      </WrapPanel>
+      <TextBlock Text="{Binding LastAction}" Style="{StaticResource MutedText}" TextWrapping="Wrap" Margin="0,4,0,0" AutomationProperties.LiveSetting="Polite" />
+      <ItemsControl ItemsSource="{Binding ErrorEntries}" FontFamily="{StaticResource MonoFont}" FontSize="12" Margin="0,4,0,0" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

@@ -1,0 +1,53 @@
+# .NET SDK, NuGet cache, and generated output
+/.dotnet/
+/.dotnet-home/
+/.packages/
+/artifacts/
+[Bb]in/
+[Oo]bj/
+[Tt]est[Rr]esults/
+*.binlog
+*.log
+*.trx
+
+# IDE, coding assistant, and operating system metadata
+.vs/
+.idea/
+*.user
+*.suo
+*.sln.docstates
+/.codex/
+/.agents/
+/.claude/settings.local.json
+/.claude/worktrees/
+CLAUDE.local.md
+__pycache__/
+*.pyc
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Local credentials and signing keys
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+*.key
+*.pfx
+*.p12
+
+# Local instrument settings, bench data, and incomplete writes
+/Recordings/
+/Captures/
+/Presets/
+preferences.json
+hardware-qualification.json
+*.json.bak
+*.json.*.tmp
+*.csv.partial
+*.json.partial
+*.jsonl.partial
+
+# Personal-use font with no verified redistribution permission
+/font/technology_2/

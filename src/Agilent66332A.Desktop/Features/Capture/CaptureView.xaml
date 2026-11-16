@@ -1,0 +1,200 @@
+<UserControl x:Class="Agilent66332A.Desktop.Features.Capture.CaptureView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:Agilent66332A.Desktop.Controls"
+             xmlns:sp="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
+             xmlns:local="clr-namespace:Agilent66332A.Desktop.Features.Capture">
+  <UserControl.Resources>
+    <Style x:Key="CaptureField" TargetType="StackPanel">
+      <Setter Property="Margin" Value="0,0,8,8" />
+    </Style>
+    <DataTemplate x:Key="EdgeSettings">
+      <UniformGrid Columns="2">
+        <StackPanel Style="{StaticResource CaptureField}">
+          <TextBlock Style="{StaticResource FieldCaption}" Text="Trigger level" />
+          <TextBox AutomationProperties.Name="Trigger level" Text="{Binding Level, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
+        <StackPanel Style="{StaticResource CaptureField}">
+          <TextBlock Style="{StaticResource FieldCaption}" Text="Hysteresis" />
+          <TextBox AutomationProperties.Name="Hysteresis" Text="{Binding Hysteresis, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
+        <StackPanel Style="{StaticResource CaptureField}">
+          <TextBlock Style="{StaticResource FieldCaption}" Text="Edge" />
+          <ComboBox ItemsSource="{Binding Slopes}" DisplayMemberPath="Label" SelectedValuePath="Value"
+                    AutomationProperties.Name="Trigger edge" SelectedValue="{Binding Slope}" />
+        </StackPanel>
+        <StackPanel Style="{StaticResource CaptureField}">
+          <TextBlock Style="{StaticResource FieldCaption}" Text="Sweeps" />
+          <TextBox AutomationProperties.Name="Sweep count" Text="{Binding Count, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
+      </UniformGrid>
+    </DataTemplate>
+  </UserControl.Resources>
+  <TabControl>
+    <TabItem Header="Waveform">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="310" />
+          <ColumnDefinition Width="12" />
+          <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Border Style="{StaticResource FormCard}" Padding="16,12,8,12">
+          <DockPanel>
+            <DockPanel DockPanel.Dock="Top" Margin="0,0,8,8">
+              <Button DockPanel.Dock="Right" VerticalAlignment="Top" Content="Read" c:Icon.Geometry="{StaticResource IconRefresh}"
+                      Command="{Binding ReadSettingsCommand}" />
+              <StackPanel Margin="0,0,8,0">
+                <TextBlock Text="Digitizer" Style="{StaticResource PageTitle}" />
+                <TextBlock Text="{Binding Availability}" Style="{StaticResource OptionalCaption}" />
+              </StackPanel>
+            </DockPanel>
+            <Button DockPanel.Dock="Bottom" HorizontalAlignment="Left" Content="Apply settings" c:Icon.Geometry="{StaticResource IconCheck}"
+                    Command="{Binding ApplySettingsCommand}" Margin="0,8,0,0" />
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+              <StackPanel IsEnabled="{Binding IsEditable}">
+                <UniformGrid Columns="2">
+                  <StackPanel Style="{StaticResource CaptureField}">
+                    <TextBlock Text="Signal" Style="{StaticResource Caption}" />
+                    <ComboBox AutomationProperties.Name="Signal" ItemsSource="{Binding Signals}" DisplayMemberPath="Label"
+                              SelectedValuePath="Value" SelectedValue="{Binding Signal}" />
+                  </StackPanel>
+                  <StackPanel Style="{StaticResource CaptureField}">
+                    <TextBlock Text="Current range" Style="{StaticResource Caption}" />
+                    <ComboBox AutomationProperties.Name="Current range" ItemsSource="{Binding Ranges}" DisplayMemberPath="Label"
+                              SelectedValuePath="Value" SelectedValue="{Binding Range}" />
+                  </StackPanel>
+                  <StackPanel Style="{StaticResource CaptureField}" IsEnabled="{Binding DetectorEditable}">
+                    <TextBlock Text="Current detector" Style="{StaticResource Caption}" />
+                    <ComboBox AutomationProperties.Name="Current detector" ItemsSource="{Binding Detectors}" DisplayMemberPath="Label"
+                              SelectedValuePath="Value" SelectedValue="{Binding Detector}" />
+                  </StackPanel>
+                  <StackPanel Style="{StaticResource CaptureField}">
+                    <TextBlock Text="Measurement window" Style="{StaticResource Caption}" />
+                    <ComboBox AutomationProperties.Name="Measurement window" ItemsSource="{Binding Windows}" DisplayMemberPath="Label"
+                              SelectedValuePath="Value" SelectedValue="{Binding Window}" />
+                  </StackPanel>
+                  <StackPanel Style="{StaticResource CaptureField}">
+                    <TextBlock Text="Samples" Style="{StaticResource Caption}" />
+                    <TextBox AutomationProperties.Name="Samples" Text="{Binding Points, UpdateSourceTrigger=PropertyChanged}" />
+                  </StackPanel>
+                  <StackPanel Style="{StaticResource CaptureField}">
+                    <TextBlock Text="Interval (µs)" Style="{StaticResource Caption}" />
+                    <TextBox AutomationProperties.Name="Sample interval in microseconds" Text="{Binding IntervalMicroseconds, UpdateSourceTrigger=PropertyChanged}" />
+                  </StackPanel>
+                  <StackPanel Style="{StaticResource CaptureField}">
+                    <TextBlock Text="Trigger offset (samples)" Style="{StaticResource Caption}" />
+                    <TextBox AutomationProperties.Name="Trigger offset in samples" Text="{Binding Offset, UpdateSourceTrigger=PropertyChanged}" />
+                  </StackPanel>
+                  <StackPanel Style="{StaticResource CaptureField}">
+                    <TextBlock Text="Stored trigger source" Style="{StaticResource Caption}" />
+                    <ComboBox AutomationProperties.Name="Stored trigger source" ItemsSource="{Binding Sources}" DisplayMemberPath="Label"
+                              SelectedValuePath="Value" SelectedValue="{Binding Source}" />
+                  </StackPanel>
+                </UniformGrid>
+                <Expander Header="Voltage trigger (V)" Margin="0,4,0,0">
+                  <ContentControl Content="{Binding VoltageTrigger}" ContentTemplate="{StaticResource EdgeSettings}" Margin="8,8,0,0" />
+                </Expander>
+                <Expander Header="Current trigger (A)" Margin="0,4,0,0">
+                  <ContentControl Content="{Binding CurrentTrigger}" ContentTemplate="{StaticResource EdgeSettings}" Margin="8,8,0,0" />
+                </Expander>
+                <Border Style="{StaticResource AckCallout}" Margin="0,8,8,0">
+                  <CheckBox IsChecked="{Binding AcknowledgeFaultOutputEvents}"
+                            ToolTip="Reading standard events can deassert an externally wired fault indicator.">
+                    <TextBlock Text="Allow capture to acknowledge fault events" TextWrapping="Wrap" />
+                  </CheckBox>
+                </Border>
+              </StackPanel>
+            </ScrollViewer>
+          </DockPanel>
+        </Border>
+        <Border Grid.Column="2" Padding="12" Style="{StaticResource PanelFrame}">
+          <DockPanel>
+            <StackPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+              <WrapPanel VerticalAlignment="Bottom">
+                <ComboBox Width="176" ToolTip="{Binding SelectedItem.Label, RelativeSource={RelativeSource Self}}" IsEnabled="{Binding IsEditable}" ItemsSource="{Binding StartModes}" DisplayMemberPath="Label"
+                          SelectedValuePath="Value" SelectedValue="{Binding Start}" AutomationProperties.Name="Capture method" Margin="0,0,8,4" />
+                <StackPanel Orientation="Horizontal" Margin="0,0,8,4">
+                  <TextBlock Text="Wait (s)" Margin="0,0,4,0" Style="{StaticResource FieldCaption}" />
+                  <TextBox Width="48" IsEnabled="{Binding IsEditable}" Text="{Binding WaitSeconds, UpdateSourceTrigger=PropertyChanged}"
+                           AutomationProperties.Name="Capture wait in seconds" />
+                </StackPanel>
+                <Button Content="Start capture" c:Icon.Geometry="{StaticResource IconPlay}" Command="{Binding StartCaptureCommand}"
+                        Style="{StaticResource PrimaryButton}" Margin="0,0,8,4" />
+                <Button Content="Fire trigger" c:Icon.Geometry="{StaticResource IconBolt}" Command="{Binding FireCommand}" Margin="0,0,8,4" />
+                <Button Content="Stop" c:Icon.Geometry="{StaticResource IconStop}" Command="{Binding StopCommand}"
+                        Style="{StaticResource GhostButton}" Margin="0,0,0,4" />
+              </WrapPanel>
+              <TextBlock Text="{Binding ProgressText}" Style="{StaticResource Caption}" Margin="0,6,0,0" AutomationProperties.LiveSetting="Polite" />
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Bottom" Margin="0,8,0,0">
+              <TextBlock x:Name="StatisticsText" Style="{StaticResource Caption}" Visibility="Collapsed" />
+              <UniformGrid x:Name="StatisticsTiles" Rows="1" Margin="0,0,0,8">
+                <UniformGrid.Resources>
+                  <Style TargetType="Border">
+                    <Setter Property="Background" Value="{DynamicResource Well}" />
+                    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}" />
+                    <Setter Property="Padding" Value="8,4" />
+                    <Setter Property="Margin" Value="0,0,4,0" />
+                  </Style>
+                  <Style x:Key="StatValue" TargetType="TextBlock" BasedOn="{StaticResource TableText}">
+                    <Setter Property="FontFamily" Value="{StaticResource MonoFont}" />
+                    <Setter Property="FontSize" Value="15" />
+                  </Style>
+                </UniformGrid.Resources>
+                <Border>
+                  <StackPanel>
+                    <TextBlock Text="DC" Style="{StaticResource Caption}" />
+                    <TextBlock x:Name="DcStat" Style="{StaticResource StatValue}" />
+                  </StackPanel>
+                </Border>
+                <Border>
+                  <StackPanel>
+                    <TextBlock Text="RMS" Style="{StaticResource Caption}" />
+                    <TextBlock x:Name="RmsStat" Style="{StaticResource StatValue}" />
+                  </StackPanel>
+                </Border>
+                <Border>
+                  <StackPanel>
+                    <TextBlock Text="Min" Style="{StaticResource Caption}" />
+                    <TextBlock x:Name="MinimumStat" Style="{StaticResource StatValue}" />
+                  </StackPanel>
+                </Border>
+                <Border>
+                  <StackPanel>
+                    <TextBlock Text="Max" Style="{StaticResource Caption}" />
+                    <TextBlock x:Name="MaximumStat" Style="{StaticResource StatValue}" />
+                  </StackPanel>
+                </Border>
+                <Border>
+                  <StackPanel>
+                    <TextBlock Text="Pulse low" Style="{StaticResource Caption}" />
+                    <TextBlock x:Name="PulseLowStat" Style="{StaticResource StatValue}" />
+                  </StackPanel>
+                </Border>
+                <Border Margin="0">
+                  <StackPanel>
+                    <TextBlock Text="Pulse high" Style="{StaticResource Caption}" />
+                    <TextBlock x:Name="PulseHighStat" Style="{StaticResource StatValue}" />
+                  </StackPanel>
+                </Border>
+              </UniformGrid>
+              <DockPanel>
+                <Button DockPanel.Dock="Left" Content="Export capture" c:Icon.Geometry="{StaticResource IconExport}" Command="{Binding ExportCommand}" />
+                <TextBlock Text="{Binding ExportLocation}" ToolTip="{Binding ExportLocation}" Style="{StaticResource OptionalCaption}"
+                           Margin="8,0,0,0" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+              </DockPanel>
+            </StackPanel>
+            <Grid>
+              <sp:WpfPlot x:Name="WaveformPlot" Focusable="False" AutomationProperties.Name="Captured waveform" />
+              <Border x:Name="EmptyWaveform" Background="{DynamicResource Well}" CornerRadius="{StaticResource RadiusControl}">
+                <HeaderedContentControl Header="No waveform yet" Content="Choose a capture method, then select Start capture."
+                                        Style="{StaticResource EmptyState}" c:Icon.Geometry="{StaticResource IconCapture}" />
+              </Border>
+            </Grid>
+          </DockPanel>
+        </Border>
+      </Grid>
+    </TabItem>
+    <TabItem Header="Output trigger"><local:TransientView DataContext="{Binding Transient}" /></TabItem>
+  </TabControl>
+</UserControl>

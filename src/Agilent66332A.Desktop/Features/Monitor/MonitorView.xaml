@@ -1,0 +1,105 @@
+<UserControl x:Class="Agilent66332A.Desktop.Features.Monitor.MonitorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:Agilent66332A.Desktop.Controls"
+             xmlns:model="clr-namespace:Agilent66332A.Core.Models;assembly=Agilent66332A.Core"
+             xmlns:monitor="clr-namespace:Agilent66332A.Desktop.Features.Monitor">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition />
+      <ColumnDefinition Width="12" />
+      <ColumnDefinition Width="316" />
+    </Grid.ColumnDefinitions>
+
+    <Border Style="{StaticResource PanelFrame}">
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition />
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Margin="12,8">
+          <DockPanel Margin="0,0,0,4">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+              <ToggleButton Style="{StaticResource ChipToggle}" Content="Voltage" IsChecked="{Binding ShowVoltage}"
+                            Background="{DynamicResource Voltage}" Margin="0,0,4,0" />
+              <ToggleButton Style="{StaticResource ChipToggle}" Content="Current" IsChecked="{Binding ShowCurrent}"
+                            Background="{DynamicResource Current}" Margin="0,0,4,0" />
+              <ToggleButton Style="{StaticResource ChipToggle}" Content="Power estimate" IsChecked="{Binding ShowPower}" Margin="0,0,4,0" />
+              <ToggleButton Style="{StaticResource ChipToggle}" Content="Freeze cursor" IsChecked="{Binding FreezeCursor}"
+                            Background="{DynamicResource Action}" />
+            </StackPanel>
+            <TextBlock Text="Trends" Style="{StaticResource Title}" />
+          </DockPanel>
+          <DockPanel>
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+              <CheckBox Content="Follow live" Style="{StaticResource ToggleSwitch}" IsChecked="{Binding FollowLive}" Margin="12,0" />
+              <Button Content="Reset view" Style="{StaticResource GhostButton}" c:Icon.Geometry="{StaticResource IconFit}"
+                      Command="{Binding ResetViewCommand}" />
+            </StackPanel>
+            <ListBox Style="{StaticResource Segmented}" ItemsSource="{Binding PlotRanges}" SelectedItem="{Binding PlotMinutes}"
+                     HorizontalAlignment="Left" VerticalAlignment="Center" AutomationProperties.Name="Plot range in minutes">
+              <ListBox.ItemTemplate>
+                <DataTemplate><TextBlock Text="{Binding StringFormat={}{0} min}" /></DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+          </DockPanel>
+        </StackPanel>
+
+        <c:TrendPanel Grid.Row="1" />
+        <Border Grid.Row="1" BorderBrush="{DynamicResource Line}" BorderThickness="0,1" Background="{DynamicResource Well}">
+          <Border.Style>
+            <Style TargetType="Border">
+              <Setter Property="Visibility" Value="Collapsed" />
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding ConnectionStatus}" Value="{x:Static model:ConnectionState.Disconnected}">
+                  <Setter Property="Visibility" Value="Visible" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </Border.Style>
+          <HeaderedContentControl Style="{StaticResource EmptyState}" c:Icon.Geometry="{StaticResource IconPlug}"
+                                  Header="Not connected" Content="Click Disconnected, choose the serial adapter, then select Connect." />
+        </Border>
+
+        <Grid Grid.Row="2" Margin="12,8">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <StackPanel Orientation="Horizontal">
+            <c:StatusBadge Text="{Binding RecordingLabel}" Foreground="{DynamicResource Fault}" Background="{DynamicResource FaultSurface}" Margin="0,0,8,0"
+                           Visibility="{Binding IsRecordingActive, Converter={StaticResource BoolVisibility}}" />
+            <Button>
+              <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                  <Setter Property="Content" Value="Start recording" />
+                  <Setter Property="c:Icon.Geometry" Value="{StaticResource IconRecordings}" />
+                  <Setter Property="Command" Value="{Binding StartRecordingCommand}" />
+                  <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsRecordingActive}" Value="True">
+                      <Setter Property="Visibility" Value="Collapsed" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsRecordingManually}" Value="True">
+                      <Setter Property="Content" Value="Stop recording" />
+                      <Setter Property="c:Icon.Geometry" Value="{StaticResource IconStop}" />
+                      <Setter Property="Command" Value="{Binding StopRecordingCommand}" />
+                      <Setter Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </Button.Style>
+            </Button>
+          </StackPanel>
+          <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10,0,0,0">
+            <Label Content="Poll (s)" Target="{Binding ElementName=PollInterval}" Style="{StaticResource FieldLabel}" />
+            <ComboBox x:Name="PollInterval" ItemsSource="{Binding PollIntervals}" SelectedItem="{Binding PollSeconds}" Width="60"
+                      AutomationProperties.Name="Polling interval in seconds" />
+          </StackPanel>
+        </Grid>
+      </Grid>
+    </Border>
+
+    <monitor:ManualControlPanel Grid.Column="2" DataContext="{Binding Manual}" />
+  </Grid>
+</UserControl>

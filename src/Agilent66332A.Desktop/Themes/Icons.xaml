@@ -1,0 +1,27 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Geometry x:Key="IconMonitor">M1.5,8.5 H4.5 L6.5,3 L9.5,13 L11.5,8.5 H14.5</Geometry>
+  <Geometry x:Key="IconSequence">M2,13 H6 V9 H10 V5 H14</Geometry>
+  <Geometry x:Key="IconRecordings">M8,2.5 A5.5,5.5 0 1 1 7.99,2.5 Z M8,6 A2,2 0 1 1 7.99,6 Z</Geometry>
+  <Geometry x:Key="IconDiagnostics">M2.5,4.5 L6.5,8 L2.5,11.5 M8.5,12 H13.5</Geometry>
+  <Geometry x:Key="IconCapture">M1.5,11.5 H4.5 V4.5 H8 V11.5 H11.5 V4.5 H14.5</Geometry>
+  <Geometry x:Key="IconSetup">M3.5,2 V14 M8,2 V14 M12.5,2 V14 M2,5.5 H5 M6.5,10.5 H9.5 M11,4.5 H14</Geometry>
+  <Geometry x:Key="IconService">M8,1.8 L13.4,4.9 V11.1 L8,14.2 L2.6,11.1 V4.9 Z M8,5.8 A2.2,2.2 0 1 1 7.99,5.8 Z</Geometry>
+  <Geometry x:Key="IconPlay">M5,3 L12.5,8 L5,13 Z</Geometry>
+  <Geometry x:Key="IconStop">M4,4 H12 V12 H4 Z</Geometry>
+  <Geometry x:Key="IconPower">M8,1.8 V7.5 M4.4,4.2 A5.2,5.2 0 1 0 11.6,4.2</Geometry>
+  <Geometry x:Key="IconPlus">M8,3 V13 M3,8 H13</Geometry>
+  <Geometry x:Key="IconCopy">M5.5,5.5 H13.5 V13.5 H5.5 Z M3,10.5 H2.5 V2.5 H10.5 V3</Geometry>
+  <Geometry x:Key="IconArrowUp">M8,13 V3 M4,7 L8,3 L12,7</Geometry>
+  <Geometry x:Key="IconArrowDown">M8,3 V13 M4,9 L8,13 L12,9</Geometry>
+  <Geometry x:Key="IconTrash">M2.5,4.5 H13.5 M6,4.5 V2.5 H10 V4.5 M4,4.5 L4.7,13.5 H11.3 L12,4.5 M6.7,7 V11 M9.3,7 V11</Geometry>
+  <Geometry x:Key="IconFolder">M1.5,12.5 V3.5 H6 L7.5,5.5 H14.5 V12.5 Z</Geometry>
+  <Geometry x:Key="IconSave">M2.5,2.5 H11 L13.5,5 V13.5 H2.5 Z M5,2.5 V6 H10 V2.5 M4.5,13.5 V9.5 H11.5 V13.5</Geometry>
+  <Geometry x:Key="IconRefresh">M13.5,8 A5.5,5.5 0 1 1 11.9,4.1 M12,1.5 V4.2 H9.3</Geometry>
+  <Geometry x:Key="IconCheck">M3,8.5 L6.5,12 L13,4.5</Geometry>
+  <Geometry x:Key="IconExport">M8,2 V10 M4.5,6.5 L8,10 L11.5,6.5 M2.5,11.5 V13.5 H13.5 V11.5</Geometry>
+  <Geometry x:Key="IconBolt">M9,1.5 L3.5,9 H7.5 L7,14.5 L12.5,7 H8.5 Z</Geometry>
+  <Geometry x:Key="IconPlug">M5.5,1.5 V5 M10.5,1.5 V5 M3.5,5 H12.5 V7.5 A4.5,4.5 0 0 1 3.5,7.5 Z M8,12 V14.5</Geometry>
+  <Geometry x:Key="IconWarning">M8,2 L14.5,13.5 H1.5 Z M8,6.5 V9.5 M8,11.4 V11.6</Geometry>
+  <Geometry x:Key="IconFit">M2.5,6 V2.5 H6 M10,2.5 H13.5 V6 M13.5,10 V13.5 H10 M6,13.5 H2.5 V10</Geometry>
+</ResourceDictionary>

@@ -1,0 +1,69 @@
+<UserControl x:Class="Agilent66332A.Desktop.Features.Monitor.ManualControlPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:Agilent66332A.Desktop.Controls">
+  <Border Style="{StaticResource PanelFrame}">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Focusable="False">
+      <StackPanel IsEnabled="{Binding CanEdit}" Margin="16">
+        <DockPanel Margin="0,0,0,12">
+          <Border DockPanel.Dock="Right" Style="{StaticResource ChipWarning}"
+                  Visibility="{Binding IsDirty, Converter={StaticResource BoolVisibility}}">
+            <TextBlock Text="Pending" />
+          </Border>
+          <TextBlock Text="Manual control" Style="{StaticResource Title}" />
+        </DockPanel>
+        <c:NumericUnitEditor Label="Voltage" Text="{Binding Voltage}" Unit="V" />
+        <c:NumericUnitEditor Label="Current limit" Text="{Binding Current}" Unit="A" />
+        <TextBlock Text="{Binding Bounds}" Style="{StaticResource OptionalCaption}" Margin="0,0,0,4" />
+        <TextBlock Text="{Binding DraftStatus}" Margin="0,0,0,8" AutomationProperties.LiveSetting="Polite">
+          <TextBlock.Style>
+            <Style TargetType="TextBlock" BasedOn="{StaticResource OptionalCaption}">
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding IsDirty}" Value="True">
+                  <Setter Property="Foreground" Value="{DynamicResource Warning}" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </TextBlock.Style>
+        </TextBlock>
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.35*" />
+            <ColumnDefinition Width="8" />
+            <ColumnDefinition />
+          </Grid.ColumnDefinitions>
+          <Button Content="{Binding ApplyLabel}" c:Icon.Geometry="{StaticResource IconCheck}" Command="{Binding ApplyCommand}" Style="{StaticResource PrimaryButton}" />
+          <Button Grid.Column="2" Content="Discard" Style="{StaticResource GhostButton}" Command="{Binding RestoreCommand}" />
+        </Grid>
+
+        <Border BorderBrush="{DynamicResource Line}" BorderThickness="0,1,0,0" Margin="0,12,0,0">
+          <Expander Header="Protections" Padding="0,8,0,12">
+            <StackPanel>
+              <c:NumericUnitEditor Label="Overvoltage limit" Text="{Binding Ovp}" Unit="V" />
+              <CheckBox Content="Overcurrent protection" Style="{StaticResource ToggleSwitch}" IsChecked="{Binding OcpEnabled}" Margin="0,0,0,8" />
+              <c:NumericUnitEditor Label="OCP delay" Text="{Binding OcpDelay}" Unit="s" ToolTip="Delays OCP and CC reporting." />
+              <TextBlock Text="Both actions turn output off first." Style="{StaticResource Caption}" Margin="0,0,0,8" />
+              <WrapPanel Margin="0,0,0,6">
+                <Button Content="Apply protections" c:Icon.Geometry="{StaticResource IconCheck}" Command="{Binding ApplyProtectionsCommand}" Margin="0,0,8,0" />
+                <Button Content="Clear fault" Style="{StaticResource GhostButton}" Command="{Binding ClearFaultCommand}" />
+              </WrapPanel>
+            </StackPanel>
+          </Expander>
+        </Border>
+        <Border BorderBrush="{DynamicResource Line}" BorderThickness="0,1,0,0">
+          <Expander Header="Presets" Padding="0,8,0,12">
+            <StackPanel>
+              <Label Content="Preset name" Target="{Binding ElementName=PresetName}" Style="{StaticResource FieldLabel}" Margin="0,0,0,4" />
+              <TextBox x:Name="PresetName" Text="{Binding PresetName, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,8" />
+              <Button Content="Save preset" c:Icon.Geometry="{StaticResource IconSave}" Command="{Binding SavePresetCommand}" HorizontalAlignment="Left" />
+              <Label Content="Saved presets" Target="{Binding ElementName=SavedPresets}" Style="{StaticResource FieldLabel}" Margin="0,10,0,4" />
+              <ComboBox x:Name="SavedPresets" ItemsSource="{Binding Presets}" SelectedItem="{Binding SelectedPreset}"
+                        DisplayMemberPath="Name" Margin="0,0,0,8" />
+              <Button Content="Load into draft" Command="{Binding LoadPresetCommand}" HorizontalAlignment="Left" />
+            </StackPanel>
+          </Expander>
+        </Border>
+      </StackPanel>
+    </ScrollViewer>
+  </Border>
+</UserControl>

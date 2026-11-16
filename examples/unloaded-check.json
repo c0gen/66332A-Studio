@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "name": "Unloaded connection check",
+  "targetModel": "66332A",
+  "repeatCount": 1,
+  "steps": [
+    {"id":"step-1","label":"Low voltage","voltageV":1,"currentLimitA":0.01,"outputEnabled":true,"holdSeconds":3},
+    {"id":"step-2","label":"Second level","voltageV":2,"currentLimitA":0.01,"outputEnabled":true,"holdSeconds":3},
+    {"id":"step-3","label":"Output off","voltageV":0,"currentLimitA":0.01,"outputEnabled":false,"holdSeconds":2}
+  ]
+}

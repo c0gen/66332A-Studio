@@ -1,0 +1,173 @@
+<UserControl x:Class="Agilent66332A.Desktop.Features.Service.ServiceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:Agilent66332A.Desktop.Controls"
+             xmlns:model="clr-namespace:Agilent66332A.Core.Models;assembly=Agilent66332A.Core">
+  <ScrollViewer DataContext="{Binding Service}" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Margin="0,0,8,0">
+      <DockPanel Margin="0,0,0,12">
+        <Button DockPanel.Dock="Right" VerticalAlignment="Top" Content="Read service settings" c:Icon.Geometry="{StaticResource IconRefresh}" Command="{Binding ReadCommand}" />
+        <StackPanel Margin="0,0,12,0">
+          <TextBlock Text="Instrument service" Style="{StaticResource PageTitle}" />
+          <TextBlock Text="{Binding ServiceStatus}" Style="{StaticResource Caption}" TextWrapping="Wrap" />
+        </StackPanel>
+      </DockPanel>
+      <Grid>
+        <Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="12" /><ColumnDefinition /></Grid.ColumnDefinitions>
+        <StackPanel>
+          <Border Style="{StaticResource FormCard}" Margin="0,0,0,12">
+            <StackPanel>
+              <TextBlock Text="Device memory and startup" Style="{StaticResource Title}" />
+              <Border Style="{StaticResource AckCallout}" Margin="0,0,0,8">
+                <CheckBox IsChecked="{Binding FixtureIsolated}">
+                <TextBlock Text="I have disconnected the load and isolated external equipment" TextWrapping="Wrap" />
+                </CheckBox>
+              </Border>
+              <Border Style="{StaticResource AckCallout}" Margin="0,0,0,8">
+                <CheckBox IsChecked="{Binding DestructiveActionConfirmed}">
+                <TextBlock Text="I have reviewed this service action and its effect on the supply" TextWrapping="Wrap" />
+                </CheckBox>
+              </Border>
+              <WrapPanel Margin="0,0,0,8">
+                <Button Content="Run self-test" Command="{Binding SelfTestCommand}" Margin="0,0,8,0" />
+                <Button Content="Reset instrument" Command="{Binding ResetInstrumentCommand}" Style="{StaticResource RiskButton}" />
+              </WrapPanel>
+              <HeaderedContentControl Style="{StaticResource FormField}">
+                <HeaderedContentControl.Header>
+                  <Label Content="Slot" Target="{Binding ElementName=MemorySlot}" Style="{StaticResource FieldLabel}" />
+                </HeaderedContentControl.Header>
+                <ComboBox x:Name="MemorySlot" ItemsSource="{Binding MemorySlots}" SelectedItem="{Binding SelectedSlot}" MinWidth="65" />
+              </HeaderedContentControl>
+              <WrapPanel Margin="0,0,0,8">
+                <Button Content="Save with output off" c:Icon.Geometry="{StaticResource IconSave}" Command="{Binding SaveSlotCommand}" Margin="0,0,8,0" />
+                <Button Content="Recall isolated" Command="{Binding RecallSlotCommand}" Style="{StaticResource RiskButton}" />
+              </WrapPanel>
+              <TextBlock Style="{StaticResource Caption}" Text="A saved state has no preview on the instrument. Recall can energize the terminals briefly before the app verifies off." TextWrapping="Wrap" Margin="0,0,0,8" />
+              <HeaderedContentControl Style="{StaticResource FormField}">
+                <HeaderedContentControl.Header>
+                  <Label Content="At power on" Target="{Binding ElementName=PowerOn}" Style="{StaticResource FieldLabel}" />
+                </HeaderedContentControl.Header>
+                <ComboBox x:Name="PowerOn" ItemsSource="{Binding PowerOnModes}" SelectedItem="{Binding SelectedPowerOn}" MinWidth="132" />
+              </HeaderedContentControl>
+              <WrapPanel Margin="0,0,0,8">
+                <Button Content="Review slot 0" Command="{Binding ReviewStartupCommand}" Margin="0,0,8,0" />
+                <Button Content="Apply startup policy" c:Icon.Geometry="{StaticResource IconCheck}" Command="{Binding SetStartupCommand}" />
+              </WrapPanel>
+              <TextBlock Text="{Binding StartupReview}" Style="{StaticResource Caption}" TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
+          <Border Style="{StaticResource FormCard}">
+            <StackPanel>
+              <TextBlock Text="Programming language" Style="{StaticResource Title}" />
+              <TextBlock Text="Changing language saves the selection and restarts the supply. Isolate the load before switching. Use the front panel Address menu to recover a unit that cannot be identified in Compatibility mode." Style="{StaticResource Caption}" TextWrapping="Wrap" Margin="0,4,0,8" />
+              <WrapPanel>
+                <Button Content="Enter Compatibility" Style="{StaticResource RiskButton}" Command="{Binding SwitchLanguageCommand}" CommandParameter="{x:Static model:ProgrammingLanguage.Compatibility}" Margin="0,0,8,4" />
+                <Button Content="Return to SCPI and verify off" Command="{Binding SwitchLanguageCommand}" CommandParameter="{x:Static model:ProgrammingLanguage.Scpi}" Margin="0,0,0,4" />
+              </WrapPanel>
+              <WrapPanel Margin="0,6,0,0">
+                <Button Content="Read legacy measurements" c:Icon.Geometry="{StaticResource IconRefresh}" Command="{Binding ReadLegacyCommand}" Margin="0,0,8,4" />
+                <Button Content="Acknowledge legacy events" Command="{Binding AcknowledgeLegacyCommand}" Margin="0,0,0,4" />
+              </WrapPanel>
+              <TextBlock Text="{Binding LegacyReading}" Style="{StaticResource Caption}" TextWrapping="Wrap" Margin="0,4,0,0" />
+              <Expander Header="Compatibility settings and maintenance" Margin="0,8,0,0" Visibility="{Binding IsCompatibilityActive, Converter={StaticResource BoolVisibility}}">
+                <StackPanel Margin="0,6,0,0">
+                  <TextBlock Text="These settings are checked through the Compatibility error register. Native GPIB service-request interrupts need a GPIB interface." Style="{StaticResource Caption}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                  <HeaderedContentControl Style="{StaticResource FormField}">
+                    <HeaderedContentControl.Header>
+                      <Label Content="Fault mask" Target="{Binding ElementName=LegacyMask}" Style="{StaticResource FieldLabel}" />
+                    </HeaderedContentControl.Header>
+                    <TextBox x:Name="LegacyMask" Text="{Binding CompatibilityFaultMask, UpdateSourceTrigger=PropertyChanged}" MinWidth="78" />
+                  </HeaderedContentControl>
+                  <WrapPanel Margin="0,0,0,8">
+                    <Button Content="Apply fault mask" c:Icon.Geometry="{StaticResource IconCheck}" Command="{Binding ApplyLegacyMaskCommand}" />
+                  </WrapPanel>
+                  <CheckBox Content="Enable service requests" IsChecked="{Binding CompatibilityServiceRequests}" VerticalAlignment="Center" />
+                  <WrapPanel Margin="0,0,0,8">
+                    <Button Content="Apply service requests" c:Icon.Geometry="{StaticResource IconCheck}" Command="{Binding ApplyLegacyRequestsCommand}" />
+                  </WrapPanel>
+                  <CheckBox Content="Request service at power on" IsChecked="{Binding CompatibilityPowerOnRequest}" VerticalAlignment="Center" />
+                  <WrapPanel Margin="0,0,0,8">
+                    <Button Content="Set power-on request" Command="{Binding ApplyLegacyPowerOnRequestCommand}" />
+                  </WrapPanel>
+                  <CheckBox Content="Close relay at power on" IsChecked="{Binding CompatibilityRelayAtPowerOn}" VerticalAlignment="Center" />
+                  <WrapPanel Margin="0,0,0,8">
+                    <Button Content="Set startup relay" Command="{Binding ApplyLegacyStartupRelayCommand}" />
+                  </WrapPanel>
+                  <TextBlock Text="{Binding CompatibilityRelayEvidence}" Style="{StaticResource Caption}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                  <WrapPanel>
+                    <Button Content="Read and clear error" Command="{Binding ReadLegacyErrorCommand}" Margin="0,0,6,4" />
+                    <Button Content="Run isolated self-test" Command="{Binding SelfTestLegacyCommand}" Margin="0,0,6,4" />
+                    <Button Content="Clear and request off" Command="{Binding ClearLegacyCommand}" Margin="0,0,0,4" />
+                  </WrapPanel>
+                </StackPanel>
+              </Expander>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+        <StackPanel Grid.Column="2">
+          <Border Style="{StaticResource FormCard}">
+            <StackPanel>
+              <TextBlock Text="Calibration" Style="{StaticResource Title}" />
+              <TextBlock Text="Use the reference equipment and fixtures in the Keysight user guide, Appendix B. The procedure can energize the selected fixture and only stores calibration constants when you select Save." Style="{StaticResource Caption}" TextWrapping="Wrap" Margin="0,5,0,10" />
+              <Border Style="{StaticResource AckCallout}" Margin="0,0,0,8">
+                <CheckBox IsChecked="{Binding CalibrationWiringConfirmed}">
+                <TextBlock Text="I am using an isolated bench and have reviewed the procedure" TextWrapping="Wrap" />
+                </CheckBox>
+              </Border>
+              <HeaderedContentControl Style="{StaticResource FormField}">
+                <HeaderedContentControl.Header>
+                  <Label Content="Procedure" Target="{Binding ElementName=Procedure}" Style="{StaticResource FieldLabel}" />
+                </HeaderedContentControl.Header>
+                <ComboBox x:Name="Procedure" ItemsSource="{Binding CalibrationProcedures}" SelectedItem="{Binding SelectedProcedure}" DisplayMemberPath="Name" />
+              </HeaderedContentControl>
+              <HeaderedContentControl Style="{StaticResource FormField}">
+                <HeaderedContentControl.Header>
+                  <Label Content="Passcode" Target="{Binding ElementName=Passcode}" Style="{StaticResource FieldLabel}" />
+                </HeaderedContentControl.Header>
+                <PasswordBox x:Name="Passcode" AutomationProperties.Name="Current calibration passcode" />
+              </HeaderedContentControl>
+              <WrapPanel Margin="0">
+                <Button Content="Start procedure" Click="StartCalibration" IsEnabled="{Binding CanStartCalibration}" />
+              </WrapPanel>
+              <Border Background="{DynamicResource Well}" BorderBrush="{DynamicResource Action}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,8,0,0"
+                      Visibility="{Binding IsPromptVisible, Converter={StaticResource BoolVisibility}}">
+                <StackPanel>
+                  <TextBlock Text="{Binding PendingPrompt.Instruction}" TextWrapping="Wrap" Margin="0,0,0,8" AutomationProperties.LiveSetting="Polite" />
+                  <HeaderedContentControl Style="{StaticResource FormField}" Visibility="{Binding IsReferencePrompt, Converter={StaticResource BoolVisibility}}">
+                    <HeaderedContentControl.Header>
+                      <Label Content="Reference" Target="{Binding ElementName=Reference}" Style="{StaticResource FieldLabel}" />
+                    </HeaderedContentControl.Header>
+                    <DockPanel>
+                      <TextBlock DockPanel.Dock="Right" Text="{Binding PendingPrompt.Unit}" VerticalAlignment="Center" Margin="8,0,0,0" />
+                      <TextBox x:Name="Reference" Text="{Binding ReferenceReading, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="External calibration reference" />
+                    </DockPanel>
+                  </HeaderedContentControl>
+                  <TextBlock Text="{Binding PromptMessage}" Style="{StaticResource Caption}" TextWrapping="Wrap" />
+                  <WrapPanel>
+                    <Button Content="{Binding ProceedLabel}" Command="{Binding ProceedCalibrationCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,8,4" />
+                    <Button Content="{Binding CancelLabel}" Command="{Binding CancelCalibrationCommand}" Margin="0,0,0,4" />
+                  </WrapPanel>
+                </StackPanel>
+              </Border>
+              <Expander Header="Change calibration passcode" Margin="0,12,0,0">
+                <StackPanel Margin="0,6,0,0">
+                  <TextBlock Text="Enter the current passcode above. The new passcode is stored immediately. Zero removes passcode protection." Style="{StaticResource Caption}" TextWrapping="Wrap" Margin="0,0,0,6" />
+                  <HeaderedContentControl Style="{StaticResource FormField}">
+                    <HeaderedContentControl.Header>
+                      <Label Content="New passcode" Target="{Binding ElementName=NewPasscode}" Style="{StaticResource FieldLabel}" />
+                    </HeaderedContentControl.Header>
+                    <PasswordBox x:Name="NewPasscode" AutomationProperties.Name="New calibration passcode" />
+                  </HeaderedContentControl>
+                  <WrapPanel Margin="0">
+                    <Button Content="Set passcode" Click="ChangePasscode" IsEnabled="{Binding CanChangePasscode}" Style="{StaticResource RiskButton}" />
+                  </WrapPanel>
+                </StackPanel>
+              </Expander>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Grid>
+      <TextBlock Text="{Binding Result}" TextWrapping="Wrap" Margin="0,8,0,0" AutomationProperties.LiveSetting="Polite" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

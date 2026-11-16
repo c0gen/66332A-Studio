@@ -1,0 +1,134 @@
+<UserControl x:Class="Agilent66332A.Desktop.Features.InstrumentSetup.InstrumentSetupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:Agilent66332A.Desktop.Controls"
+             xmlns:model="clr-namespace:Agilent66332A.Core.Models;assembly=Agilent66332A.Core">
+  <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" DataContext="{Binding InstrumentSetup}">
+    <StackPanel Margin="0,0,8,0">
+      <DockPanel Margin="0,0,0,12">
+        <Button DockPanel.Dock="Right" Content="Read instrument" c:Icon.Geometry="{StaticResource IconRefresh}" Command="{Binding ReadCommand}" VerticalAlignment="Top" />
+        <StackPanel Margin="0,0,12,0">
+          <TextBlock Text="Instrument setup" Style="{StaticResource PageTitle}" />
+          <TextBlock Text="{Binding IdentityText}" Style="{StaticResource Caption}" TextWrapping="Wrap" />
+          <TextBlock Text="{Binding HardwareText}" Style="{StaticResource Caption}" TextWrapping="Wrap" />
+        </StackPanel>
+      </DockPanel>
+      <Border Style="{StaticResource AckCallout}" Margin="0,0,0,8">
+        <CheckBox Content="I have checked the external wiring and isolated affected equipment" IsChecked="{Binding WiringConfirmed}" />
+      </Border>
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="1.15*" />
+          <ColumnDefinition Width="12" />
+          <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <StackPanel>
+          <Border Style="{StaticResource FormCard}" Margin="0,0,0,12">
+            <StackPanel>
+              <TextBlock Text="Rear digital port" Style="{StaticResource Title}" />
+              <TextBlock Text="{Binding PortReadback}" Style="{StaticResource Caption}" Margin="0,4,0,12" />
+              <HeaderedContentControl Style="{StaticResource FormField}">
+                <HeaderedContentControl.Header>
+                  <Label Content="Function" Target="{Binding ElementName=PortFunction}" Style="{StaticResource FieldLabel}" />
+                </HeaderedContentControl.Header>
+                <ComboBox x:Name="PortFunction" ItemsSource="{Binding PortFunctions}" SelectedItem="{Binding PortFunction}" MinWidth="135" />
+              </HeaderedContentControl>
+              <HeaderedContentControl Style="{StaticResource FormField}">
+                <HeaderedContentControl.Header>
+                  <Label Content="Inhibit" Target="{Binding ElementName=Inhibit}" Style="{StaticResource FieldLabel}" />
+                </HeaderedContentControl.Header>
+                <ComboBox x:Name="Inhibit" ItemsSource="{Binding InhibitModes}" SelectedItem="{Binding Inhibit}" MinWidth="100" />
+              </HeaderedContentControl>
+              <HeaderedContentControl Style="{StaticResource FormField}">
+                <HeaderedContentControl.Header>
+                  <Label Content="Fault source" Target="{Binding ElementName=FaultSource}" Style="{StaticResource FieldLabel}" />
+                </HeaderedContentControl.Header>
+                <ComboBox x:Name="FaultSource" ItemsSource="{Binding FaultSources}" SelectedItem="{Binding FaultSource}" MinWidth="140" />
+              </HeaderedContentControl>
+              <CheckBox Content="Enable fault output" Style="{StaticResource ToggleSwitch}" IsChecked="{Binding EnableFaultIndicator}" VerticalAlignment="Center" />
+              <WrapPanel Margin="0,0,0,8">
+                <Button Content="Apply port settings" c:Icon.Geometry="{StaticResource IconCheck}" Command="{Binding ApplyPortCommand}" />
+              </WrapPanel>
+              <Border BorderBrush="{DynamicResource Line}" BorderThickness="0,1,0,0" Padding="0,8,0,0">
+                <StackPanel>
+                  <HeaderedContentControl Style="{StaticResource FormField}">
+                    <HeaderedContentControl.Header>
+                      <Label Content="Output value" Target="{Binding ElementName=OutputValue}" Style="{StaticResource FieldLabel}" />
+                    </HeaderedContentControl.Header>
+                    <ComboBox x:Name="OutputValue" ItemsSource="{Binding OutputMasks}" SelectedItem="{Binding OutputMask}" MinWidth="70" />
+                  </HeaderedContentControl>
+                  <WrapPanel Margin="0,0,0,8">
+                    <Button Content="Write digital outputs" Command="{Binding WritePinsCommand}" />
+                  </WrapPanel>
+                  <TextBlock Style="{StaticResource Caption}" Text="In Digital I/O mode, the device reports the actual level on pin 3." TextWrapping="Wrap" />
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </Border>
+          <Border Style="{StaticResource FormCard}">
+            <StackPanel>
+              <TextBlock Text="Output relay" Style="{StaticResource Title}" />
+              <TextBlock Text="{Binding RelayReadback}" Style="{StaticResource Caption}" Margin="0,4,0,12" />
+              <HeaderedContentControl Style="{StaticResource FormField}">
+                <HeaderedContentControl.Header>
+                  <Label Content="Polarity" Target="{Binding ElementName=Polarity}" Style="{StaticResource FieldLabel}" />
+                </HeaderedContentControl.Header>
+                <ComboBox x:Name="Polarity" ItemsSource="{Binding RelayPolarities}" SelectedItem="{Binding Polarity}" MinWidth="94" />
+              </HeaderedContentControl>
+              <CheckBox Content="Close contacts" Style="{StaticResource ToggleSwitch}" IsChecked="{Binding RelayClosed}" VerticalAlignment="Center" />
+              <WrapPanel Margin="0,0,0,8">
+                <Button Content="Apply relay settings" c:Icon.Geometry="{StaticResource IconCheck}" Command="{Binding ApplyRelayCommand}" />
+              </WrapPanel>
+              <WrapPanel Margin="0">
+                <Button Content="Output on, keep relay" Command="{Binding EnableWithoutRelayCommand}" Margin="0,0,8,0" />
+                <Button Content="Output off, keep relay" Command="{Binding DisableWithoutRelayCommand}" />
+              </WrapPanel>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+        <StackPanel Grid.Column="2">
+          <Border Style="{StaticResource FormCard}" Margin="0,0,0,12">
+            <StackPanel>
+              <TextBlock Text="Front panel display" Style="{StaticResource Title}" />
+              <TextBlock Text="{Binding DisplayReadback}" Style="{StaticResource Caption}" Margin="0,4,0,12" />
+              <HeaderedContentControl Style="{StaticResource FormField}">
+                <HeaderedContentControl.Header>
+                  <Label Content="Mode" Target="{Binding ElementName=DisplayMode}" Style="{StaticResource FieldLabel}" />
+                </HeaderedContentControl.Header>
+                <ComboBox x:Name="DisplayMode" ItemsSource="{Binding DisplayModes}" SelectedItem="{Binding DisplayMode}" MinWidth="110" />
+              </HeaderedContentControl>
+              <HeaderedContentControl Style="{StaticResource FormField}">
+                <HeaderedContentControl.Header>
+                  <Label Content="Display text" Target="{Binding ElementName=DisplayText}" Style="{StaticResource FieldLabel}" />
+                </HeaderedContentControl.Header>
+                <TextBox x:Name="DisplayText" Text="{Binding DisplayText, UpdateSourceTrigger=PropertyChanged}" MaxLength="14" />
+              </HeaderedContentControl>
+              <CheckBox Content="Display on" Style="{StaticResource ToggleSwitch}" IsChecked="{Binding DisplayEnabled}" VerticalAlignment="Center" />
+              <WrapPanel Margin="0">
+                <Button Content="Apply display settings" c:Icon.Geometry="{StaticResource IconCheck}" Command="{Binding ApplyDisplayCommand}" />
+              </WrapPanel>
+            </StackPanel>
+          </Border>
+          <Border Style="{StaticResource FormCard}">
+            <StackPanel>
+              <TextBlock Text="Front panel control" Style="{StaticResource Title}" Margin="0,0,0,8" />
+              <WrapPanel Margin="0,0,0,8">
+                <Button Content="Return to local" Command="{Binding SetPanelControlCommand}" CommandParameter="{x:Static model:PanelControlMode.Local}" Margin="0,0,8,0" />
+                <Button Content="Enter remote" Command="{Binding SetPanelControlCommand}" CommandParameter="{x:Static model:PanelControlMode.Remote}" />
+              </WrapPanel>
+              <Border Style="{StaticResource AckCallout}" Margin="0,0,0,8">
+                <CheckBox IsChecked="{Binding LockoutConfirmed}" >
+                  <TextBlock Text="Disable the instrument’s Local key until I return control" TextWrapping="Wrap" />
+                </CheckBox>
+              </Border>
+              <WrapPanel Margin="0">
+                <Button Content="Enter remote lockout" Command="{Binding SetPanelControlCommand}" CommandParameter="{x:Static model:PanelControlMode.RemoteLockout}" Style="{StaticResource RiskButton}" />
+              </WrapPanel>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Grid>
+      <TextBlock Text="{Binding Result}" Style="{StaticResource MutedText}" TextWrapping="Wrap" Margin="0,8,0,0" AutomationProperties.LiveSetting="Polite" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

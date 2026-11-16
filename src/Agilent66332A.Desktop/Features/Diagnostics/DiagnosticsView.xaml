@@ -1,0 +1,137 @@
+<UserControl x:Class="Agilent66332A.Desktop.Features.Diagnostics.DiagnosticsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:Agilent66332A.Desktop.Controls"
+             xmlns:local="clr-namespace:Agilent66332A.Desktop.Features.Diagnostics">
+  <UserControl.Resources>
+    <c:ContainsConverter x:Key="Contains" />
+    <Style x:Key="LogList" TargetType="ListBox">
+      <Setter Property="Background" Value="{DynamicResource Well}" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="FontFamily" Value="{DynamicResource MonoFont}" />
+      <Setter Property="FontSize" Value="12.5" />
+      <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+      <Setter Property="ItemContainerStyle">
+        <Setter.Value>
+          <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+            <Setter Property="Padding" Value="10,3" />
+          </Style>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </UserControl.Resources>
+  <Grid DataContext="{Binding Diagnostics}">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition />
+      <ColumnDefinition Width="12" />
+      <ColumnDefinition />
+    </Grid.ColumnDefinitions>
+
+    <Expander Grid.ColumnSpan="3" Header="Instrument registers and errors" Margin="0,0,0,10">
+      <Border Style="{StaticResource PanelFrame}">
+        <local:DiagnosticsRegistersView DataContext="{Binding Registers}" />
+      </Border>
+    </Expander>
+
+    <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource PanelFrame}" Padding="1">
+      <DockPanel>
+        <DockPanel DockPanel.Dock="Top" Margin="16,12">
+          <TextBlock DockPanel.Dock="Right" Text="{Binding Events.Count, StringFormat={}{0} entries}" Style="{StaticResource Caption}" />
+          <TextBlock Text="Session events" Style="{StaticResource Title}" />
+        </DockPanel>
+        <Grid>
+          <ListBox ItemsSource="{Binding Events}" Style="{StaticResource LogList}" AutomationProperties.Name="Timestamped session events">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding}">
+                  <TextBlock.Style>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource TableText}">
+                      <Setter Property="Foreground" Value="{DynamicResource Ink}" />
+                      <Style.Triggers>
+                        <DataTrigger Binding="{Binding Converter={StaticResource Contains}, ConverterParameter='failure:'}" Value="True">
+                          <Setter Property="Foreground" Value="{DynamicResource Fault}" />
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </TextBlock.Style>
+                </TextBlock>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          <HeaderedContentControl Header="No session events yet" Content="Connection and instrument events appear here." c:Icon.Geometry="{StaticResource IconMonitor}">
+            <HeaderedContentControl.Style>
+              <Style TargetType="HeaderedContentControl" BasedOn="{StaticResource EmptyState}">
+                <Setter Property="Visibility" Value="Collapsed" />
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding Events.Count}" Value="0">
+                    <Setter Property="Visibility" Value="Visible" />
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </HeaderedContentControl.Style>
+          </HeaderedContentControl>
+        </Grid>
+      </DockPanel>
+    </Border>
+
+    <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource PanelFrame}" Padding="1">
+      <DockPanel>
+        <DockPanel DockPanel.Dock="Top" Margin="16,12">
+          <TextBlock DockPanel.Dock="Right" Text="{Binding Transcript.Count, StringFormat={}{0} entries}" Style="{StaticResource Caption}" />
+          <TextBlock Text="Protocol history" Style="{StaticResource Title}" />
+        </DockPanel>
+        <Grid>
+          <ListBox ItemsSource="{Binding Transcript}" Style="{StaticResource LogList}" AutomationProperties.Name="Protocol transcript">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding}">
+                  <TextBlock.Style>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource TableText}">
+                      <Setter Property="Foreground" Value="{DynamicResource Ink}" />
+                      <Style.Triggers>
+                        <DataTrigger Binding="{Binding Converter={StaticResource Contains}, ConverterParameter='  &gt; '}" Value="True">
+                          <Setter Property="Foreground" Value="{DynamicResource Action}" />
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </TextBlock.Style>
+                </TextBlock>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          <HeaderedContentControl Header="No protocol traffic yet" Content="Commands and instrument responses appear here." c:Icon.Geometry="{StaticResource IconDiagnostics}">
+            <HeaderedContentControl.Style>
+              <Style TargetType="HeaderedContentControl" BasedOn="{StaticResource EmptyState}">
+                <Setter Property="Visibility" Value="Collapsed" />
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding Transcript.Count}" Value="0">
+                    <Setter Property="Visibility" Value="Visible" />
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </HeaderedContentControl.Style>
+          </HeaderedContentControl>
+        </Grid>
+      </DockPanel>
+    </Border>
+
+    <Border Grid.Row="2" Grid.ColumnSpan="3" Style="{StaticResource PanelFrame}" Padding="16" Margin="0,12,0,0">
+      <DockPanel>
+        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="8,0,0,0">
+          <Button Content="Copy all" Style="{StaticResource GhostButton}" c:Icon.Geometry="{StaticResource IconCopy}" Command="{Binding CopyCommand}" />
+          <Button Content="Export" c:Icon.Geometry="{StaticResource IconExport}" Command="{Binding ExportCommand}" Margin="8,0,0,0" />
+        </StackPanel>
+        <StackPanel>
+          <Label Content="Export to" Target="{Binding ElementName=ExportPath}" Style="{StaticResource FieldLabel}" />
+          <TextBox x:Name="ExportPath" Text="{Binding ExportPath, UpdateSourceTrigger=PropertyChanged}"
+                   AutomationProperties.Name="Diagnostics export path" />
+        </StackPanel>
+      </DockPanel>
+    </Border>
+  </Grid>
+</UserControl>
